@@ -53,4 +53,14 @@ export class routes {
   public static get error500(): string {
     return this.baseUrl + '/error/error500';
   }
+
+  public static get addRoleChampionship(): string {
+    return this.baseUrl + '/roles/register';
+  }
+  public static get editRoleChampionship(): string {
+    return this.baseUrl + '/roles/edit';
+  }
+  public static get listRoleChampionship(): string {
+    return this.baseUrl + '/roles/list';
+  }
 }

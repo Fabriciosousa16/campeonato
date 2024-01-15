@@ -27,7 +27,7 @@ export class DataService {
   }
   public sideBar = [
     {
-      tittle: 'Main',
+      tittle: 'Meu Campeonato',
       showAsTab: false,
       separateRoute: false,
       menu: [
@@ -47,30 +47,6 @@ export class DataService {
           ],
         },
         {
-          menuValue: 'Usuários',
-          hasSubRoute: true,
-          showSubRoute: false,
-          base: 'doctor',
-          img: 'assets/img/icons/menu-icon-02.svg',
-          subMenus: [
-            {
-              menuValue: 'Lista de Usuários',
-              route: routes.usersList,
-              base: routes.usersList,
-            },
-            {
-              menuValue: 'Adicionar Usuário',
-              route: routes.addUser,
-              base: routes.addUser,
-            },
-            {
-              menuValue: 'Editar Usuário',
-              route: routes.editUser,
-              base: routes.editUser,
-            },
-          ],
-        },
-        {
           menuValue: 'Campeonato',
           hasSubRoute: true,
           showSubRoute: false,
@@ -79,18 +55,13 @@ export class DataService {
           subMenus: [
             {
               menuValue: 'Lista de Campeonatos',
-              route: routes.championshipsList,
-              base: routes.championshipsList,
+              route: routes.listRoleChampionship,
+              base: routes.listRoleChampionship,
             },
             {
               menuValue: 'Adicionar Campeonato',
-              route: routes.addChampionship,
-              base: routes.addChampionship,
-            },
-            {
-              menuValue: 'Editar Campeonato',
-              route: routes.editChampionship,
-              base: routes.editChampionship,
+              route: routes.addRoleChampionship,
+              base: routes.addRoleChampionship,
             },
           ],
         },

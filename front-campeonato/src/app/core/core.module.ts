@@ -13,8 +13,8 @@ import { SharedModule } from '../shared/shared.module';
 @NgModule({
   declarations: [
     CoreComponent,
-    HeaderComponent,
-    SidebarComponent,
+    // HeaderComponent,
+    // SidebarComponent,
     ModalComponent,
   ],
   imports: [

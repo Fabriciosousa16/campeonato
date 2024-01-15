@@ -1,19 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { routes } from 'src/app/shared/routes/routes';
-import { MatTableDataSource } from "@angular/material/table";
-import { pageSelection, apiResultFormat, championshipsList } from 'src/app/shared/models/models';
-import { Sort } from '@angular/material/sort';
-import { DataService } from 'src/app/shared/data/data.service';
+import { Component, ViewChild } from '@angular/core';
+import { ChampionshipService } from './../../../shared/championship/championship.service';
+import { MatTableDataSource } from '@angular/material/table';
 
+declare var $: any;
 @Component({
-  selector: 'app-championships-list',
-  templateUrl: './championships-list.component.html',
-  styleUrls: ['./championships-list.component.scss']
+  selector: 'app-list-championship',
+  templateUrl: './list-role-championship.component.html',
+  styleUrls: ['./list-role-championship.component.scss']
 })
-export class ChampionshipsListComponent implements OnInit {
-  public routes = routes;
-  public championshipsList: Array<championshipsList> = [];
-  dataSource!: MatTableDataSource<championshipsList>;
+export class ListRoleChampionshipComponent {
+  public championshipsList: any = [];
+  dataSource!: MatTableDataSource<any>;
+
+  @ViewChild('closebutton') closebutton: any;
 
   public showFilter = false;
   public searchDataValue = '';
@@ -26,10 +25,15 @@ export class ChampionshipsListComponent implements OnInit {
   public serialNumberArray: Array<number> = [];
   public currentPage = 1;
   public pageNumberArray: Array<number> = [];
-  public pageSelection: Array<pageSelection> = [];
+  public pageSelection: Array<any> = [];
   public totalPages = 0;
 
-  constructor(public data: DataService) {
+  public role_generals: any = [];
+  public role_selected: any;
+
+  constructor(
+    public ChampionshipService: ChampionshipService
+  ) {
 
   }
   ngOnInit() {
@@ -39,9 +43,10 @@ export class ChampionshipsListComponent implements OnInit {
     this.championshipsList = [];
     this.serialNumberArray = [];
 
-    this.data.getChampionshipsList().subscribe((data: apiResultFormat) => {
-      this.totalData = data.totalData;
-      data.data.map((res: championshipsList, index: number) => {
+    this.ChampionshipService.listChampionships().subscribe((resp: any) => {
+      console.log(resp.campeonato);
+      this.totalData = resp.campeonato.lenght;
+      resp.campeonato.map((res: any, index: number) => {
         const serialNumber = index + 1;
         if (index >= this.skip && serialNumber <= this.limit) {
 
@@ -49,23 +54,51 @@ export class ChampionshipsListComponent implements OnInit {
           this.serialNumberArray.push(serialNumber);
         }
       });
-      this.dataSource = new MatTableDataSource<championshipsList>(this.championshipsList);
+
+      this.dataSource = new MatTableDataSource<any>(this.championshipsList);
       this.calculateTotalPages(this.totalData, this.pageSize);
-    });
+
+    })
   }
+
+  selectRole(rol: any) {
+    this.role_selected = rol;
+  }
+
+  deleteRol() {
+
+    this.ChampionshipService.deleteChampionships(this.role_selected.id).subscribe((resp: any) => {
+
+      const INDEX = this.championshipsList.findIndex((item: any) => item.id == this.role_selected.id);
+
+      if (INDEX != -1) {
+        this.championshipsList.splice(INDEX, 1);
+
+        $('#delete_patient').hide();
+        $('#delete_patient').removeClass("show");
+        $('.modal-backdrop').hide();
+        $('body').removeClass();
+        $('body').removeAttr("style");
+
+        this.role_selected = null;
+      }
+
+    })
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData(value: any): void {
     this.dataSource.filter = value.trim().toLowerCase();
     this.championshipsList = this.dataSource.filteredData;
   }
 
-  public sortData(sort: Sort) {
+  public sortData(sort: any) {
     const data = this.championshipsList.slice();
 
     if (!sort.active || sort.direction === '') {
       this.championshipsList = data;
     } else {
-      this.championshipsList = data.sort((a, b) => {
+      this.championshipsList = data.sort((a: any, b: any) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,8 +152,8 @@ export class ChampionshipsListComponent implements OnInit {
     }
     /* eslint no-var: off */
     for (var i = 1; i <= this.totalPages; i++) {
-      var limit = pageSize * i;
-      var skip = limit - pageSize;
+      const limit = pageSize * i;
+      const skip = limit - pageSize;
       this.pageNumberArray.push(i);
       this.pageSelection.push({ skip: skip, limit: limit });
     }

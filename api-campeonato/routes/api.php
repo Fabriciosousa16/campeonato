@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Dashboard\Championship\ChampionshipController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +34,12 @@ Route::group([
     Route::post('/me', [AuthController::class, 'me'])->name('me');
 });
 
-Route::prefix('championship')->group(function () {
-    
+
+
+Route::group([
+ 
+    'middleware' => 'auth:api'
+ 
+], function ($router) {
+    Route::resource("championship", ChampionshipController::class);
 });

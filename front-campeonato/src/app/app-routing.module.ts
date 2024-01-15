@@ -15,6 +15,10 @@ const routes: Routes = [
   },
   {
     path: '',
+    loadChildren: () => import('./championship/championship.module').then((m) => m.ChampionshipModule),
+  },
+  {
+    path: '',
     loadChildren: () =>
       import('./authentication/authentication.module').then(
         (m) => m.AuthenticationModule
@@ -36,4 +40,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

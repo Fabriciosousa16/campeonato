@@ -20,10 +20,13 @@ const routes: Routes = [
           import('./user/user.module').then((m) => m.UserModule),
       },
       {
-        path: 'championship',
+        path: 'edit-profile',
         loadChildren: () =>
-          import('./championship/championship.module').then((m) => m.ChampionshipModule),
+          import('./edit-profile/edit-profile.module').then(
+            (m) => m.EditProfileModule
+          ),
       },
+
       {
         path: 'edit-profile',
         loadChildren: () =>

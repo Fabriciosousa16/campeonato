@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Dashboard\Championship;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Campeonato;
 
-class Championship extends Controller
+
+class ChampionshipController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,21 +16,23 @@ class Championship extends Controller
      */
     public function index(Request $request)
     {
-        $championship = Championship::all();
+        $campeonato = Campeonato::all();
 
         return response()->json([
-            'championship' => $championship->map(function($resp){
+            'campeonato' => $campeonato->map(function($resp){
                 return [
                     'id' => $resp->id,
                     'name' => $resp->name,
-                    'type' => $resp->type,
-                    'created_at' =>$resp->created_at->format("y=m=d h:i:s"),
-                    'update_at' => $resp->update_at
+                    'torneio_id' => $resp->torneio_id,
+                    'status_id' => $resp->status_id,
+                    'created_at' => $resp->created_at->format("Y-m-d H:i:s"),
+                    'update_at' => $resp->updated_at->format("Y-m-d H:i:s")
+
                 ];
             }),
         ]);
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -37,7 +41,7 @@ class Championship extends Controller
      */
     public function store(Request $request)
     {
-        $verifyName = Championship::where('name', $request->name)->first();
+        $verifyName = campeonato::where('name', $request->name)->first();
 
         if ($verifyName) {
             return response()->json([
@@ -47,9 +51,10 @@ class Championship extends Controller
         }
         
         try {
-            $championship = Championship::create([
+            $campeonato = campeonato::create([
                 'name' => $request->name,
-                'type' => $request->type,
+                'torneio_id' => $request->torneio_id,
+                'status_id' => $request->status_id,
             ]);
         
             return response()->json([
@@ -74,7 +79,16 @@ class Championship extends Controller
      */
     public function show($id)
     {
-        //
+        $search = campeonato::findOrFail($id);
+
+        return response()->json([
+            'id' => $search->id,
+            'name' => $search->name,
+            'torneio_id' => $search->torneio_id,
+            'status_id' => $search->status_id,
+            'created_at' => $search->created_at->format("Y-m-d H:i:s"),
+            'update_at' => $search->updated_at->format("Y-m-d H:i:s")
+        ]);
     }
 
     /**
@@ -86,7 +100,7 @@ class Championship extends Controller
      */
     public function update(Request $request, $id)
     {
-        $verifyName = Championship::where('name', $request->name)->first();
+        $verifyName = campeonato::where('name', $request->name)->first();
 
         if ($verifyName) {
             return response()->json([
@@ -97,7 +111,7 @@ class Championship extends Controller
         
         try {
 
-            $update = Championship::findOrFail($id);
+            $update = campeonato::findOrFail($id);
 
             $update->update($request->all());
         
@@ -125,18 +139,18 @@ class Championship extends Controller
     {
         try {
 
-            $delete = Championship::findOrFail($id);
-
+            $delete = campeonato::findOrFail($id);
+            
             $delete->delete();
         
             return response()->json([
                 "status" => 200,
-                "message" => "Atualizado com Sucesso"
+                "message" => "Deletado com Sucesso"
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 "status" => 500,
-                "message" => "Erro ao Atualizar o Campeonato",
+                "message" => "Erro ao Deletar o Campeonato",
                 "error" => $e->getMessage()
             ]);
         }

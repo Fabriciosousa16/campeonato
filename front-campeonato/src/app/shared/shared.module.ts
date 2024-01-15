@@ -13,9 +13,15 @@ import { DataService } from './data/data.service';
 import { MatSortModule } from '@angular/material/sort';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { HeaderComponent } from '../common-component/header/header.component';
+import { SidebarComponent } from '../common-component/sidebar/sidebar.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    HeaderComponent,
+    SidebarComponent,
+  ],
   imports: [
     CommonModule,
     NgxBootstrapModule,
@@ -30,11 +36,11 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
       "clockwise": false,
       "startFromZero": false,
       "lazy": false,
-      "outerStrokeLinecap":"square",
+      "outerStrokeLinecap": "square",
       "showSubtitle": false,
-      "showTitle" : false,
-      "showUnits" : false,
-      "showBackground" : false
+      "showTitle": false,
+      "showUnits": false,
+      "showBackground": false
     }),
     SlickCarouselModule,
     materialModule,
@@ -44,7 +50,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatSortModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    RouterModule
   ],
   exports: [
     CommonModule,
@@ -60,7 +67,9 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatSortModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
+    HeaderComponent,
+    SidebarComponent,
   ],
   providers: [
     DataService,
