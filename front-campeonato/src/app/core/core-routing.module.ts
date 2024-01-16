@@ -14,26 +14,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
       },
-      {
-        path: 'user',
-        loadChildren: () =>
-          import('./user/user.module').then((m) => m.UserModule),
-      },
-      {
-        path: 'edit-profile',
-        loadChildren: () =>
-          import('./edit-profile/edit-profile.module').then(
-            (m) => m.EditProfileModule
-          ),
-      },
-
-      {
-        path: 'edit-profile',
-        loadChildren: () =>
-          import('./edit-profile/edit-profile.module').then(
-            (m) => m.EditProfileModule
-          ),
-      },
     ],
   },
 ];

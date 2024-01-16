@@ -26,8 +26,6 @@
                 </span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" [routerLink]="routes.editProfile">Editar Perfil</a>
-
                 <a class="dropdown-item" href="#" onclick="return false;" (click)="logout()">Logout</a>
             </div>
         </li>
@@ -36,7 +34,6 @@
         <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
                 class="fa-solid fa-ellipsis-vertical"></i></a>
         <div class="dropdown-menu dropdown-menu-end">
-            <a class="dropdown-item" [routerLink]="routes.editProfile">Editar Perfil</a>
             <a class="dropdown-item" [routerLink]="routes.login">Logout</a>
         </div>
     </div>

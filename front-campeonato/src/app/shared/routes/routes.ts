@@ -5,15 +5,6 @@ export class routes {
   public static get baseUrl(): string {
     return this.Url;
   }
-  public static get changePassword2(): string {
-    return this.baseUrl + '/change-password2';
-  }
-  public static get forgotPassword(): string {
-    return this.baseUrl + '/forgot-password';
-  }
-  public static get lockScreen(): string {
-    return this.baseUrl + '/lock-screen';
-  }
   public static get login(): string {
     return this.baseUrl + '/login';
   }
@@ -23,44 +14,37 @@ export class routes {
   public static get Dashboard(): string {
     return this.baseUrl + '/dashboard/dashboard';
   }
-  public static get addUser(): string {
-    return this.baseUrl + '/user/add-user';
-  }
-  public static get usersList(): string {
-    return this.baseUrl + '/user/users-list';
-  }
-  public static get editUser(): string {
-    return this.baseUrl + '/user/edit-user';
-  }
   public static get addChampionship(): string {
-    return this.baseUrl + '/championship/add-championship';
+    return this.baseUrl + '/championship/register';
   }
   public static get editChampionship(): string {
-    return this.baseUrl + '/championship/edit-championship';
+    return this.baseUrl + '/championship/edit';
   }
-  public static get championshipsList(): string {
-    return this.baseUrl + '/championship/championships-list';
+  public static get listChampionship(): string {
+    return this.baseUrl + '/championship/list';
   }
-  public static get profile(): string {
-    return this.baseUrl + '/profile';
+  public static get addTeams(): string {
+    return this.baseUrl + '/teams/register';
   }
-  public static get editProfile(): string {
-    return this.baseUrl + '/edit-profile';
+  public static get editTeams(): string {
+    return this.baseUrl + '/teams/edit';
+  }
+  public static get listTeams(): string {
+    return this.baseUrl + '/teams/list';
+  }
+  public static get editSimulation(): string {
+    return this.baseUrl + '/simulation/edit';
+  }
+  public static get listSimulation(): string {
+    return this.baseUrl + '/simulation/list';
+  }
+  public static get listHistory(): string {
+    return this.baseUrl + '/history/list';
   }
   public static get error404(): string {
     return this.baseUrl + '/error/error404';
   }
   public static get error500(): string {
     return this.baseUrl + '/error/error500';
-  }
-
-  public static get addRoleChampionship(): string {
-    return this.baseUrl + '/roles/register';
-  }
-  public static get editRoleChampionship(): string {
-    return this.baseUrl + '/roles/edit';
-  }
-  public static get listRoleChampionship(): string {
-    return this.baseUrl + '/roles/list';
   }
 }

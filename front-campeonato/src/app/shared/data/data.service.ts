@@ -1,30 +1,12 @@
 import { Injectable } from '@angular/core';
 import { routes } from '../routes/routes';
-import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { apiResultFormat } from '../models/models';
-
-
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
   constructor(private http: HttpClient) { }
 
-  public getUsersList(): Observable<apiResultFormat> {
-    return this.http.get<apiResultFormat>('assets/json/doctors-list.json').pipe(
-      map((res: apiResultFormat) => {
-        return res;
-      })
-    );
-  }
-  public getChampionshipsList(): Observable<apiResultFormat> {
-    return this.http.get<apiResultFormat>('assets/json/doctors-list.json').pipe(
-      map((res: apiResultFormat) => {
-        return res;
-      })
-    );
-  }
   public sideBar = [
     {
       tittle: 'Meu Campeonato',
@@ -55,13 +37,63 @@ export class DataService {
           subMenus: [
             {
               menuValue: 'Lista de Campeonatos',
-              route: routes.listRoleChampionship,
-              base: routes.listRoleChampionship,
+              route: routes.listChampionship,
+              base: routes.listChampionship,
             },
             {
               menuValue: 'Adicionar Campeonato',
-              route: routes.addRoleChampionship,
-              base: routes.addRoleChampionship,
+              route: routes.addChampionship,
+              base: routes.addChampionship,
+            },
+          ],
+        },
+
+        {
+          menuValue: 'Times',
+          hasSubRoute: true,
+          showSubRoute: false,
+          base: 'teams',
+          img: 'assets/img/icons/menu-icon-03.svg',
+          subMenus: [
+            {
+              menuValue: 'Lista de Times',
+              route: routes.listTeams,
+              base: routes.listTeams,
+            },
+            {
+              menuValue: 'Adicionar Times',
+              route: routes.addTeams,
+              base: routes.addTeams,
+            },
+          ],
+        },
+
+        {
+          menuValue: 'Simulação',
+          hasSubRoute: true,
+          showSubRoute: false,
+          base: 'simulation',
+          img: 'assets/img/icons/menu-icon-03.svg',
+          subMenus: [
+            {
+              menuValue: 'Lista de Simulaçoes',
+              route: routes.listSimulation,
+              base: routes.listSimulation,
+            },
+          ],
+        },
+
+        {
+          menuValue: 'Histórico',
+          hasSubRoute: true,
+          showSubRoute: false,
+          base: 'history',
+          img: 'assets/img/icons/menu-icon-03.svg',
+          subMenus: [
+            {
+              menuValue: 'Histórico de Competições',
+              route: routes.listHistory,
+              base: routes.listHistory,
             },
           ],
         },

@@ -13,14 +13,12 @@ import { DataService } from './data/data.service';
 import { MatSortModule } from '@angular/material/sort';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { HeaderComponent } from '../common-component/header/header.component';
-import { SidebarComponent } from '../common-component/sidebar/sidebar.component';
-import { RouterModule } from '@angular/router';
+// import { HeaderComponent } from '../common-component/header/header.component';
+// import { SidebarComponent } from '../common-component/sidebar/sidebar.component';
+// import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
-    HeaderComponent,
-    SidebarComponent,
   ],
   imports: [
     CommonModule,
@@ -51,7 +49,7 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     NgxMaterialTimepickerModule,
-    RouterModule
+    // RouterModule
   ],
   exports: [
     CommonModule,
@@ -68,8 +66,8 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     ReactiveFormsModule,
     NgxMaterialTimepickerModule,
-    HeaderComponent,
-    SidebarComponent,
+    // HeaderComponent,
+    // SidebarComponent,
   ],
   providers: [
     DataService,
