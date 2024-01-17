@@ -25,4 +25,9 @@ class Campeonato extends Model
     {
         return $this->hasMany(Time::class);
     }
+
+    public function resultados()
+    {
+        return $this->hasMany(Resultado::class);
+    }
 }

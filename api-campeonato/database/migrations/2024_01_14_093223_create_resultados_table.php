@@ -15,11 +15,12 @@ class CreateResultadosTable extends Migration
     {
         Schema::create('resultados', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('campeonato_id')->constrained('campeonatos');
             $table->foreignId('fase_id')->constrained('fases');
             $table->foreignId('equipe_a_id')->constrained('times');
             $table->foreignId('equipe_b_id')->constrained('times');
-            $table->integer('gols_equipe_a')->default(0);
-            $table->integer('gols_equipe_b')->default(0);
+            $table->integer('gols_equipe_a')->nullable();
+            $table->integer('gols_equipe_b')->nullable();
             // outros campos, se necessário
             $table->timestamps();
         });

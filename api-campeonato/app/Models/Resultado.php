@@ -9,7 +9,12 @@ class Resultado extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['fase_id', 'equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b'];
+    protected $fillable = ['campeonato_id','fase_id', 'equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b'];
+
+    public function campeonato()
+    {
+        return $this->belongsTo(Fase::class);
+    }
 
     public function fase()
     {

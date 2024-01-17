@@ -1,33 +1,25 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Championship;
+namespace App\Http\Controllers\Dashboard\Teams;
 
 use App\Http\Controllers\Controller;
+use App\Models\Time;
 use Illuminate\Http\Request;
-use App\Models\Campeonato;
 
-
-class ChampionshipController extends Controller
+class TeamsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-        $campeonato = Campeonato::all();
+        $times = Time::all();
 
         return response()->json([
-            'campeonato' => $campeonato->map(function($resp){
+            'times' => $times->map(function($resp){
                 return [
                     'id' => $resp->id,
                     'name' => $resp->name,
-                    'torneio_id' => $resp->torneio_id,
-                    'status_id' => $resp->status_id,
+                    'campeonato_id' => $resp->campeonato_id,
                     'created_at' => $resp->created_at->format("Y-m-d H:i:s"),
                     'update_at' => $resp->updated_at->format("Y-m-d H:i:s")
-
                 ];
             }),
         ]);
@@ -41,34 +33,42 @@ class ChampionshipController extends Controller
      */
     public function store(Request $request)
     {
-        $verifyName = campeonato::where('name', $request->name)->first();
+        $verifyName = Time::where('name', $request->name)
+        ->where('campeonato_id', $request->campeonato_id)
+        ->first();
+
+        $countTimesInCampeonato = Time::where('campeonato_id', $request->campeonato_id)->count();
+
+        if ($countTimesInCampeonato>7)  {
+            return response()->json([
+                "status" => 403,
+                "message" => "Campeonato Já possui a quantidade maxima de times permitidas"
+            ]);
+        }
+    
 
         if ($verifyName) {
             return response()->json([
                 "status" => 403,
-                "message" => "Nome do Campeonato já cadastrado"
+                "message" => "Nome do Time já cadastrado no Campeonato"
             ]);
         }
         
         try {
-            $campeonato = campeonato::create([
-                'name' => $request->name,
-                'torneio_id' => $request->torneio_id,
-                'status_id' => $request->status_id,
-            ]);
+            $time = Time::create($request->all());
 
-            if($campeonato){
+            if ($time){
                 return response()->json([
                     "status" => 200,
                     "message" => "Adicionado com Sucesso"
                 ]);
             }
         
-
+          
         } catch (\Exception $e) {
             return response()->json([
                 "status" => 500,
-                "message" => "Erro ao adicionar o Campeonato",
+                "message" => "Erro ao adicionar o Time",
                 "error" => $e->getMessage()
             ]);
         }        
@@ -83,13 +83,12 @@ class ChampionshipController extends Controller
      */
     public function show($id)
     {
-        $search = campeonato::findOrFail($id);
+        $search = Time::findOrFail($id);
 
         return response()->json([
             'id' => $search->id,
             'name' => $search->name,
-            'torneio_id' => $search->torneio_id,
-            'status_id' => $search->status_id,
+            'campeonato_id' => $search->campeonato_id,
             'created_at' => $search->created_at->format("Y-m-d H:i:s"),
             'update_at' => $search->updated_at->format("Y-m-d H:i:s")
         ]);
@@ -104,18 +103,20 @@ class ChampionshipController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $verifyName = campeonato::where('name', $request->name)->first();
+        $verifyName = Time::where('name', $request->name)
+        ->where('campeonato_id', $request->campeonato_id)
+        ->first();
 
         if ($verifyName) {
             return response()->json([
                 "status" => 403,
-                "message" => "Nome do Campeonato já cadastrado"
+                "message" => "Nome do Time já cadastrado no Campeonato"
             ]);
         }
         
         try {
 
-            $update = campeonato::findOrFail($id);
+            $update = Time::findOrFail($id);
 
             $update->update($request->all());
         
@@ -126,7 +127,7 @@ class ChampionshipController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 "status" => 500,
-                "message" => "Erro ao Atualizar o Campeonato",
+                "message" => "Erro ao Atualizar o Time",
                 "error" => $e->getMessage()
             ]);
         }
@@ -143,18 +144,23 @@ class ChampionshipController extends Controller
     {
         try {
 
-            $delete = campeonato::findOrFail($id);
-            
-            $delete->delete();
+            $delete = Time::findOrFail($id);
+
+            if ($delete){
+                
+                $delete->delete();
         
-            return response()->json([
-                "status" => 200,
-                "message" => "Deletado com Sucesso"
-            ]);
+                return response()->json([
+                    "status" => 200,
+                    "message" => "Deletado com Sucesso"
+                ]);
+            }
+            
+           
         } catch (\Exception $e) {
             return response()->json([
                 "status" => 500,
-                "message" => "Erro ao Deletar o Campeonato",
+                "message" => "Erro ao Deletar o Time",
                 "error" => $e->getMessage()
             ]);
         }
