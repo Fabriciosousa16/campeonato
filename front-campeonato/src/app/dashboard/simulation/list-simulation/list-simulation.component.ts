@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { SimulationService } from 'src/app/shared/simulation/simulation.service';
+import { ChampionshipService } from '../../../shared/championship/championship.service';
 
-declare var $: any;
+
 @Component({
   selector: 'app-list-simulations',
   templateUrl: './list-simulation.component.html',
@@ -42,49 +43,36 @@ export class ListSimulationComponent {
     this.serialNumberArray = [];
 
     this.SimulationService.listSimulation().subscribe((resp: any) => {
-      console.log(resp.campeonato);
-      this.totalData = resp.campeonato.lenght;
-      resp.campeonato.map((res: any, index: number) => {
-        const serialNumber = index + 1;
-        if (index >= this.skip && serialNumber <= this.limit) {
+      console.log(resp.simulacao);
 
-          this.simulationList.push(res);
-          this.serialNumberArray.push(serialNumber);
-        }
-      });
+      // Verifique se resp.simulacao existe antes de tentar acessar seu comprimento
+      if (resp && resp.simulacao && Array.isArray(resp.simulacao)) {
+        this.totalData = resp.simulacao.length;
 
-      this.dataSource = new MatTableDataSource<any>(this.simulationList);
-      this.calculateTotalPages(this.totalData, this.pageSize);
+        resp.simulacao.map((res: any, index: number) => {
+          const serialNumber = index + 1;
+          if (index >= this.skip && serialNumber <= this.limit) {
+            this.simulationList.push(res);
+            this.serialNumberArray.push(serialNumber);
+          }
+        });
 
-    })
+        this.dataSource = new MatTableDataSource<any>(this.simulationList);
+        this.calculateTotalPages(this.totalData, this.pageSize);
+      } else {
+        console.error('A propriedade simulacao não existe ou não é um array válido:', resp);
+        // Adicione lógica de tratamento de erro conforme necessário
+      }
+    });
   }
+
+
+
 
   selectRole(rol: any) {
     this.role_selected = rol;
   }
 
-  deleteRol() {
-
-    this.SimulationService.deleteSimulation(this.role_selected.id).subscribe((resp: any) => {
-
-      const INDEX = this.simulationList.findIndex((item: any) => item.id == this.role_selected.id);
-
-      if (INDEX != -1) {
-        this.simulationList.splice(INDEX, 1);
-
-        $('#delete_patient').hide();
-        $('#delete_patient').removeClass("show");
-        $('.modal-backdrop').hide();
-        $('body').removeClass();
-        $('body').removeAttr("style");
-
-        this.role_selected = null;
-      }
-
-    })
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData(value: any): void {
     this.dataSource.filter = value.trim().toLowerCase();
     this.simulationList = this.dataSource.filteredData;

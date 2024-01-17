@@ -6,9 +6,9 @@
             <div class="row">
                 <div class="col-sm-12">
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Time</a></li>
+                        <li class="breadcrumb-item"><a href="#">Histórico de Competições</a></li>
                         <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
-                        <li class="breadcrumb-item active">Lista de Times</li>
+                        <li class="breadcrumb-item active">Lista de Hitórico</li>
                     </ul>
                 </div>
             </div>
@@ -26,32 +26,24 @@
                             <div class="row align-items-center">
                                 <div class="col">
                                     <div class="doctor-table-blk">
-                                        <h3>Lista de Times</h3>
+                                        <h3>Histórico de Competições</h3>
                                         <div class="doctor-search-blk">
-                                            <div class="top-nav-search table-search-blk">
-                                                <input type="text" class="form-control" placeholder="Buscar"
-                                                    [(ngModel)]="searchDataValue"
-                                                    (ngModelChange)="searchData(searchDataValue)">
-                                                <a class="btn"><img src="assets/img/icons/search-normal.svg" alt=""></a>
-                                            </div>
+
+                                            <mat-select [(ngModel)]="campeonato_id"
+                                                [ngModelOptions]="{standalone: true}" class="form-control select"
+                                                placeholder="Selecione um Campeonato">
+                                                <mat-option [value]="null">Selecione um Campeonato</mat-option>
+                                                <mat-option *ngFor="let data of championshipList" [value]="data.id">
+                                                    {{data.name}}
+                                                </mat-option>
+                                            </mat-select>
+
                                             <div class="add-group">
-                                                <a href="#" class="btn btn-primary add-pluss ms-2"><img
-                                                        src="assets/img/icons/plus.svg" alt=""></a>
                                                 <a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img
                                                         src="assets/img/icons/re-fresh.svg" alt=""></a>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-auto text-end float-end ms-auto download-grp">
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-01.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;"><img src="assets/img/icons/pdf-icon-04.svg" alt=""></a>
-
                                 </div>
                             </div>
                         </div>
@@ -62,56 +54,19 @@
                                 class="table border-0 custom-table comman-table datatable mb-0">
                                 <thead>
                                     <tr>
-                                        <th mat-sort-header="name">Nome</th>
-                                        <th mat-sort-header="department">Campeonato_id</th>
-                                        <th mat-sort-header="specialization">Criado</th>
-                                        <th mat-sort-header="specialization">Atualizado</th>
+                                        <th mat-sort-header="name">Time</th>
+                                        <th mat-sort-header="department">Campeonato</th>
+                                        <th mat-sort-header="specialization">fase</th>
+
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let data of championshipsList">
+                                    <tr *ngFor="let data of historyList">
 
-                                        <td>{{data.name}}</td>
-                                        <td>{{data.Campeonato_id}}</td>
-                                        <td>{{data.created_at}}</td>
-                                        <td>{{data.update_at}}</td>
-
-                                        <td class="text-end">
-                                            <div class="dropdown dropdown-action">
-                                                <a href="javascript:void(0);" class="action-icon dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                        class="fa fa-ellipsis-v"></i></a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item"
-                                                        [routerLink]="['/roles/list/edit/', data.id]"><i
-                                                            class="fa-solid fa-pen-to-square m-r-5"></i>
-                                                        Editar</a>
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                        (click)="selectRole(data)" data-bs-toggle="modal"
-                                                        [attr.data-bs-target]="'#delete_patient-'+data.id"><i
-                                                            class="fa fa-trash-alt m-r-5"></i> Deletar</a>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <div [attr.id]="'delete_patient-'+data.id" class="modal fade delete-modal"
-                                            role="dialog">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-body text-center">
-                                                        <img src="assets/img/sent.png" alt="" width="50" height="46">
-                                                        <h3 *ngIf="role_selected"> Deseja Deletar esse Arquivo ?</h3>
-                                                        <div class="m-t-20"> <a href="javascript:void(0);" #closebutton
-                                                                class="btn btn-white me-1"
-                                                                data-bs-dismiss="modal">Não</a>
-                                                            <button type="submit" class="btn btn-danger"
-                                                                (click)="deleteRol()">Sim</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <td>{{data.time_name}}</td>
+                                        <td>{{data.campeonato_name}}</td>
+                                        <td>{{data.fase_name}}</td>
 
                                     </tr>
                                 </tbody>
@@ -180,7 +135,7 @@
                                             disabled:
                                               currentPage ===
                                                 pageNumberArray[pageNumberArray.length - 1] ||
-                                                championshipsList.length === 0
+                                                historyList.length === 0
                                           }">
                                                 <a (click)="getMoreData('next')" class="page-link"
                                                     href="javascript:void(0);">Next

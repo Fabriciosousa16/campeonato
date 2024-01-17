@@ -35,7 +35,8 @@
                                                 <a class="btn"><img src="assets/img/icons/search-normal.svg" alt=""></a>
                                             </div>
                                             <div class="add-group">
-                                                <a href="#" class="btn btn-primary add-pluss ms-2"><img
+                                                <a [routerLink]="['/teams/register']"
+                                                    class="btn btn-primary add-pluss ms-2"><img
                                                         src="assets/img/icons/plus.svg" alt=""></a>
                                                 <a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img
                                                         src="assets/img/icons/re-fresh.svg" alt=""></a>
@@ -43,16 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-auto text-end float-end ms-auto download-grp">
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-01.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;"><img src="assets/img/icons/pdf-icon-04.svg" alt=""></a>
 
-                                </div>
                             </div>
                         </div>
                         <!-- /Table Header -->
@@ -63,7 +55,7 @@
                                 <thead>
                                     <tr>
                                         <th mat-sort-header="name">Nome</th>
-                                        <th mat-sort-header="department">Campeonato_id</th>
+                                        <th mat-sort-header="department">Campeonato</th>
                                         <th mat-sort-header="specialization">Criado</th>
                                         <th mat-sort-header="specialization">Atualizado</th>
                                         <th></th>
@@ -84,7 +76,7 @@
                                                         class="fa fa-ellipsis-v"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        [routerLink]="['/roles/list/edit/', data.id]"><i
+                                                        [routerLink]="['/teams/list/edit/', data.id]"><i
                                                             class="fa-solid fa-pen-to-square m-r-5"></i>
                                                         Editar</a>
                                                     <a class="dropdown-item" href="javascript:void(0);"

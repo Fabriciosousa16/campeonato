@@ -13,6 +13,11 @@ const routes: Routes = [
         path: 'list',
         component: ListSimulationComponent
       },
+
+      {
+        path: 'list/edit/:id',
+        component: EditSimulationComponent
+      },
     ]
   }
 ];

@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TeamsRoutingModule } from './teams-routing.module';
 import { TeamsComponent } from './teams.component';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { TeamsComponent } from './teams.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    MatSelectModule
   ]
 })
 export class TeamsModule { }

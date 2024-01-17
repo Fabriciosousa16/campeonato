@@ -17,31 +17,31 @@ export class TeamsService {
 
   listTeams() {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship";
+    const URL = URL_SEVICES + "/teams";
     return this.http.get(URL, { headers: headers });
   }
 
   showTeams(id: string) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship/" + id;
+    const URL = URL_SEVICES + "/teams/" + id;
     return this.http.get(URL, { headers: headers });
   }
 
   storeTeams(data: any) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship";
+    const URL = URL_SEVICES + "/teams";
     return this.http.post(URL, data, { headers: headers });
   }
 
   editTeams(data: any, id: any) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship/" + id;
+    const URL = URL_SEVICES + "/teams/" + id;
     return this.http.put(URL, data, { headers: headers });
   }
 
   deleteTeams(id: number) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship/" + id;
+    const URL = URL_SEVICES + "/teams/" + id;
     return this.http.delete(URL, { headers: headers });
   }
 

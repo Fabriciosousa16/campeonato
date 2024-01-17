@@ -43,16 +43,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-auto text-end float-end ms-auto download-grp">
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-01.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-02.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;" class=" me-2"><img src="assets/img/icons/pdf-icon-03.svg"
-                                            alt=""></a>
-                                    <a href="javascript:;"><img src="assets/img/icons/pdf-icon-04.svg" alt=""></a>
 
-                                </div>
                             </div>
                         </div>
                         <!-- /Table Header -->
@@ -64,6 +55,7 @@
                                     <tr>
                                         <th mat-sort-header="name">Nome</th>
                                         <th mat-sort-header="department">Campeonato_id</th>
+                                        <th mat-sort-header="department">Status_id</th>
                                         <th mat-sort-header="specialization">Criado</th>
                                         <th mat-sort-header="specialization">Atualizado</th>
                                         <th></th>
@@ -73,7 +65,8 @@
                                     <tr *ngFor="let data of simulationList">
 
                                         <td>{{data.name}}</td>
-                                        <td>{{data.Campeonato_id}}</td>
+                                        <td>{{data.campeonato_id}}</td>
+                                        <td>{{data.status_id}}</td>
                                         <td>{{data.created_at}}</td>
                                         <td>{{data.update_at}}</td>
 
@@ -84,34 +77,13 @@
                                                         class="fa fa-ellipsis-v"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-end">
                                                     <a class="dropdown-item"
-                                                        [routerLink]="['/roles/list/edit/', data.id]"><i
+                                                        [routerLink]="['/simulation/list/edit/', data.id]"><i
                                                             class="fa-solid fa-pen-to-square m-r-5"></i>
                                                         Editar</a>
-                                                    <a class="dropdown-item" href="javascript:void(0);"
-                                                        (click)="selectRole(data)" data-bs-toggle="modal"
-                                                        [attr.data-bs-target]="'#delete_patient-'+data.id"><i
-                                                            class="fa fa-trash-alt m-r-5"></i> Deletar</a>
+
                                                 </div>
                                             </div>
                                         </td>
-
-                                        <div [attr.id]="'delete_patient-'+data.id" class="modal fade delete-modal"
-                                            role="dialog">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-body text-center">
-                                                        <img src="assets/img/sent.png" alt="" width="50" height="46">
-                                                        <h3 *ngIf="role_selected"> Deseja Deletar esse Arquivo ?</h3>
-                                                        <div class="m-t-20"> <a href="javascript:void(0);" #closebutton
-                                                                class="btn btn-white me-1"
-                                                                data-bs-dismiss="modal">Não</a>
-                                                            <button type="submit" class="btn btn-danger"
-                                                                (click)="deleteRol()">Sim</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
 
                                     </tr>
                                 </tbody>

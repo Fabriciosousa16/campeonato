@@ -1,18 +1,17 @@
+import { HistoryService } from './../../../shared/history/history.service';
 import { Component } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { TeamsService } from '../../../shared/teams/teams.service';
+import { ChampionshipService } from './../../../shared/championship/championship.service';
 
-declare var $: any;
+
 @Component({
   selector: 'app-list-history',
   templateUrl: './list-history.component.html',
   styleUrls: ['./list-history.component.scss']
 })
 export class ListHistoryComponent {
-  public championshipsList: any = [];
+  public historyList: any = [];
   dataSource!: MatTableDataSource<any>;
-
-  // @ViewChild('closebutton') closebutton: any;
 
   public showFilter = false;
   public searchDataValue = '';
@@ -28,77 +27,76 @@ export class ListHistoryComponent {
   public pageSelection: Array<any> = [];
   public totalPages = 0;
 
-  public role_generals: any = [];
-  public role_selected: any;
+  public campeonato_id: any;
+  public championshipList: any = [];
 
   constructor(
-    public TeamsService: TeamsService
+    public HistoryService: HistoryService,
+    public ChampionshipService: ChampionshipService
   ) {
 
   }
   ngOnInit() {
     this.getTableData();
+
+    this.ChampionshipService.listChampionships().subscribe(
+      (resp: any) => {
+        // Verifique se o array championshipsList existe nos dados retornados
+        if (resp && Array.isArray(resp.campeonato)) {
+          this.championshipList = resp.campeonato;
+        } else {
+          console.error('Array championshipsList não encontrado nos dados retornados.');
+        }
+      },
+      (error) => {
+        console.error('Erro ao obter lista de campeonatos:', error);
+        // Adicione lógica de tratamento de erro conforme necessário
+      }
+    );
   }
+
   private getTableData(): void {
-    this.championshipsList = [];
+    this.historyList = [];
     this.serialNumberArray = [];
 
-    this.TeamsService.listTeams().subscribe((resp: any) => {
-      console.log(resp.campeonato);
-      this.totalData = resp.campeonato.lenght;
-      resp.campeonato.map((res: any, index: number) => {
-        const serialNumber = index + 1;
-        if (index >= this.skip && serialNumber <= this.limit) {
+    this.HistoryService.listHistory().subscribe((resp: any) => {
+      console.log(resp.historys);  // Corrigir o nome da propriedade para 'historys'
 
-          this.championshipsList.push(res);
-          this.serialNumberArray.push(serialNumber);
-        }
-      });
+      // Verifique se resp.historys existe antes de tentar acessar seu comprimento
+      if (resp && resp.historys && Array.isArray(resp.historys)) {
+        this.totalData = resp.historys.length;
 
-      this.dataSource = new MatTableDataSource<any>(this.championshipsList);
-      this.calculateTotalPages(this.totalData, this.pageSize);
+        resp.historys.map((res: any, index: number) => {
+          const serialNumber = index + 1;
+          if (index >= this.skip && serialNumber <= this.limit) {
+            this.historyList.push(res);
+            this.serialNumberArray.push(serialNumber);
+          }
+        });
 
-    })
-  }
-
-  selectRole(rol: any) {
-    this.role_selected = rol;
-  }
-
-  deleteRol() {
-
-    this.TeamsService.deleteTeams(this.role_selected.id).subscribe((resp: any) => {
-
-      const INDEX = this.championshipsList.findIndex((item: any) => item.id == this.role_selected.id);
-
-      if (INDEX != -1) {
-        this.championshipsList.splice(INDEX, 1);
-
-        $('#delete_patient').hide();
-        $('#delete_patient').removeClass("show");
-        $('.modal-backdrop').hide();
-        $('body').removeClass();
-        $('body').removeAttr("style");
-
-        this.role_selected = null;
+        this.dataSource = new MatTableDataSource<any>(this.historyList);
+        this.calculateTotalPages(this.totalData, this.pageSize);
+      } else {
+        console.error('A propriedade historys não existe ou não é um array válido:', resp);
+        // Adicione lógica de tratamento de erro conforme necessário
       }
-
-    })
+    });
   }
+
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData(value: any): void {
     this.dataSource.filter = value.trim().toLowerCase();
-    this.championshipsList = this.dataSource.filteredData;
+    this.historyList = this.dataSource.filteredData;
   }
 
   public sortData(sort: any) {
-    const data = this.championshipsList.slice();
+    const data = this.historyList.slice();
 
     if (!sort.active || sort.direction === '') {
-      this.championshipsList = data;
+      this.historyList = data;
     } else {
-      this.championshipsList = data.sort((a: any, b: any) => {
+      this.historyList = data.sort((a: any, b: any) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const aValue = (a as any)[sort.active];
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

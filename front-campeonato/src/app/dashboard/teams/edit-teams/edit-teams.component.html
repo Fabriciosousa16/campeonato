@@ -26,69 +26,27 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6 col-xl-6">
+                                <div class="col-12 col-md-6 col-xl-3">
                                     <div class="form-group local-forms">
-                                        <label>Time 1 <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Campeonato">
+                                        <label>Campeonato <span class="login-danger">*</span></label>
+                                        <mat-select [(ngModel)]="campeonato_id" [ngModelOptions]="{standalone: true}"
+                                            class="form-control select" placeholder="Selecione um Campeonato">
+                                            <mat-option [value]="null">Selecione um Campeonato</mat-option>
+                                            <mat-option *ngFor="let data of championshipList" [value]="data.id">
+                                                {{data.name}}
+                                            </mat-option>
+                                        </mat-select>
                                     </div>
                                 </div>
 
                                 <div class="col-12 col-md-6 col-xl-6">
                                     <div class="form-group local-forms">
-                                        <label>Time 2 <span class="login-danger">*</span></label>
+                                        <label>Time <span class="login-danger">*</span></label>
                                         <input class="form-control" type="text" [(ngModel)]="name" name="name2"
-                                            placeholder="Nome do Campeonato">
+                                            placeholder="Nome da Equipe">
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6 col-xl-6">
-                                    <div class="form-group local-forms">
-                                        <label>Time 3 <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name3"
-                                            placeholder="Nome do Campeonato">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-6">
-                                    <div class="form-group local-forms">
-                                        <label>Time 4 <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name4"
-                                            placeholder="Nome do Campeonato">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-6">
-                                    <div class="form-group local-forms">
-                                        <label>Time 5 <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name5"
-                                            placeholder="Nome do Campeonato">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-6">
-                                    <div class="form-group local-forms">
-                                        <label>Time 6 <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name6"
-                                            placeholder="Nome do Campeonato">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-6">
-                                    <div class="form-group local-forms">
-                                        <label>Time 7 <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name7"
-                                            placeholder="Nome do Campeonato">
-                                    </div>
-                                </div>
-
-                                <div class="col-12 col-md-6 col-xl-6">
-                                    <div class="form-group local-forms">
-                                        <label>Time 8 <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name8"
-                                            placeholder="Nome do Campeonato">
-                                    </div>
-                                </div>
 
                                 <div class="form-group row" *ngIf="valid_form">
                                     <div class="col-md-6">

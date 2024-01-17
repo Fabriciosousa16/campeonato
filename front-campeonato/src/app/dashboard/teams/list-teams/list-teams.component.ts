@@ -42,9 +42,9 @@ export class ListTeamsComponent {
     this.serialNumberArray = [];
 
     this.TeamsService.listTeams().subscribe((resp: any) => {
-      console.log(resp.campeonato);
-      this.totalData = resp.campeonato.lenght;
-      resp.campeonato.map((res: any, index: number) => {
+      console.log(resp.times);
+      this.totalData = resp.times.lenght;
+      resp.times.map((res: any, index: number) => {
         const serialNumber = index + 1;
         if (index >= this.skip && serialNumber <= this.limit) {
 
@@ -84,7 +84,6 @@ export class ListTeamsComponent {
     })
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public searchData(value: any): void {
     this.dataSource.filter = value.trim().toLowerCase();
     this.teamsList = this.dataSource.filteredData;

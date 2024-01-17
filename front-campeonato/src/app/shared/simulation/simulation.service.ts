@@ -17,31 +17,31 @@ export class SimulationService {
 
   listSimulation() {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship";
+    const URL = URL_SEVICES + "/simulation";
     return this.http.get(URL, { headers: headers });
   }
 
   showSimulation(id: string) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship/" + id;
+    const URL = URL_SEVICES + "/simulation/" + id;
     return this.http.get(URL, { headers: headers });
   }
 
   storeSimulation(data: any) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship";
+    const URL = URL_SEVICES + "/simulation";
     return this.http.post(URL, data, { headers: headers });
   }
 
   editSimulation(data: any, id: any) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship/" + id;
+    const URL = URL_SEVICES + "/simulation/" + id;
     return this.http.put(URL, data, { headers: headers });
   }
 
   deleteSimulation(id: number) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
-    const URL = URL_SEVICES + "/championship/" + id;
+    const URL = URL_SEVICES + "/simulation/" + id;
     return this.http.delete(URL, { headers: headers });
   }
 

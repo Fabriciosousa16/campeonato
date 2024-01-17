@@ -1,5 +1,6 @@
+import { ChampionshipService } from './../../../shared/championship/championship.service';
+import { TeamsService } from './../../../shared/teams/teams.service';
 import { Component } from '@angular/core';
-import { TeamsService } from '../../../shared/teams/teams.service';
 import { DataService } from 'src/app/shared/data/data.service';
 
 @Component({
@@ -10,31 +11,53 @@ import { DataService } from 'src/app/shared/data/data.service';
 export class AddTeamsComponent {
   sideBar: any = [];
   name = '';
-  torneio_id = 1;
-  status_id = 1;
+
   valid_form = false;
   valid_form_success = false;
   text_validation: any = null;
 
+  public campeonato_id: any;
+  public championshipList: any = [];
+
   constructor(
     public DataService: DataService,
-    public TeamsService: TeamsService
+    public TeamsService: TeamsService,
+    public ChampionshipService: ChampionshipService
   ) { }
 
   ngOnInit() {
     this.sideBar = this.DataService.sideBar[0].menu;
+
+    // alert(JSON.stringify(this.championshipList)); // Exibe os dados em uma janela de alerta
+
+    this.ChampionshipService.listChampionships().subscribe(
+      (resp: any) => {
+        // Verifique se o array championshipsList existe nos dados retornados
+        if (resp && Array.isArray(resp.campeonato)) {
+          this.championshipList = resp.campeonato;
+        } else {
+          console.error('Array championshipsList não encontrado nos dados retornados.');
+        }
+      },
+      (error) => {
+        console.error('Erro ao obter lista de campeonatos:', error);
+        // Adicione lógica de tratamento de erro conforme necessário
+      }
+    );
+
   }
 
   save() {
     this.valid_form = false;
-    if (!this.name) {
+    console.log('Campeonato ID:', this.campeonato_id);
+
+    if (!this.name || !this.campeonato_id) {
       this.valid_form = true;
       return;
     }
-    let data = {
+    const data = {
       name: this.name,
-      torneio_id: this.torneio_id,
-      status_id: this.status_id
+      campeonato_id: this.campeonato_id,
     };
 
     this.valid_form_success = false;
@@ -48,11 +71,12 @@ export class AddTeamsComponent {
         this.text_validation = resp.message;
       } else {
         this.name = '';
-        this.torneio_id = 1;
-        this.status_id = 1;
+        // eslint-disable-next-line no-self-assign
+        this.campeonato_id = this.campeonato_id;
+
         this.valid_form_success = true;
 
-        let SIDE_BAR = this.sideBar;
+        const SIDE_BAR = this.sideBar;
         this.sideBar = [];
 
         setTimeout(() => {
