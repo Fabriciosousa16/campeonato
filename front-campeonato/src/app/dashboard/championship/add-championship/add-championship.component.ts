@@ -31,7 +31,7 @@ export class AddChampionshipComponent {
       this.valid_form = true;
       return;
     }
-    let data = {
+    const data = {
       name: this.name,
       torneio_id: this.torneio_id,
       status_id: this.status_id
@@ -52,7 +52,7 @@ export class AddChampionshipComponent {
         this.status_id = 1;
         this.valid_form_success = true;
 
-        let SIDE_BAR = this.sideBar;
+        const SIDE_BAR = this.sideBar;
         this.sideBar = [];
 
         setTimeout(() => {

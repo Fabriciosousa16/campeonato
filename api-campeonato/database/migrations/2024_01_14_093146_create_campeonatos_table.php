@@ -18,7 +18,6 @@ class CreateCampeonatosTable extends Migration
             $table->string('name');
             $table->foreignId('torneio_id')->constrained('torneios');
             $table->foreignId('status_id')->constrained('statuses');
-            // outros campos, se necessário
             $table->timestamps();
         });
     }

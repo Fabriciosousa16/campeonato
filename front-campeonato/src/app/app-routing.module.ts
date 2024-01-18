@@ -15,19 +15,6 @@ const routes: Routes = [
   },
 
   {
-    path: '',
-    loadChildren: () =>
-      import('./authentication/authentication.module').then(
-        (m) => m.AuthenticationModule
-      ),
-  },
-  {
-    path: 'error',
-    loadChildren: () =>
-      import('./error/error.module').then((m) => m.ErrorModule),
-  },
-
-  {
     path: 'championship',
     loadChildren: () =>
       import('./dashboard/championship/championship.module').then((m) => m.ChampionshipModule),
@@ -51,12 +38,24 @@ const routes: Routes = [
       import('./dashboard/history/history.module').then((m) => m.HistoryModule),
   },
 
+
+  {
+    path: '',
+    loadChildren: () =>
+      import('./authentication/authentication.module').then(
+        (m) => m.AuthenticationModule
+      ),
+  },
+  {
+    path: 'error',
+    loadChildren: () =>
+      import('./error/error.module').then((m) => m.ErrorModule),
+  },
   {
     path: '**',
     redirectTo: 'error/error404',
     pathMatch: 'full',
   },
-
 ];
 
 @NgModule({

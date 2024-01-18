@@ -16,7 +16,6 @@ class CreateTorneiosTable extends Migration
         Schema::create('torneios', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // outros campos, se necessário
             $table->timestamps();
         });
     }

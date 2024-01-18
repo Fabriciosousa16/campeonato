@@ -16,7 +16,7 @@ class CreateFasesTable extends Migration
         Schema::create('fases', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // outros campos, se necessário
+            $table->foreignId('torneio_id')->constrained('torneios');
             $table->timestamps();
         });
     }

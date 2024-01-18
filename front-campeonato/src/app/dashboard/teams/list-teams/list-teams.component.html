@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Time</a></li>
+                        <li class="breadcrumb-item"><a [routerLink]="[]">Time</a></li>
                         <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
                         <li class="breadcrumb-item active">Lista de Times</li>
                     </ul>
@@ -54,20 +54,22 @@
                                 class="table border-0 custom-table comman-table datatable mb-0">
                                 <thead>
                                     <tr>
-                                        <th mat-sort-header="name">Nome</th>
-                                        <th mat-sort-header="department">Campeonato</th>
-                                        <th mat-sort-header="specialization">Criado</th>
-                                        <th mat-sort-header="specialization">Atualizado</th>
+                                        <th mat-sort-header="id">#</th>
+                                        <th mat-sort-header="name">Time</th>
+                                        <th mat-sort-header="championship">Campeonato</th>
+                                        <th mat-sort-header="created">Criado</th>
+                                        <th mat-sort-header="update">Atualizado</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let data of teamsList">
 
+                                        <td>{{data.id}}</td>
                                         <td>{{data.name}}</td>
-                                        <td>{{data.Campeonato_id}}</td>
+                                        <td>{{data.campeonato_name}}</td>
                                         <td>{{data.created_at}}</td>
-                                        <td>{{data.update_at}}</td>
+                                        <td>{{data.updated_at}}</td>
 
                                         <td class="text-end">
                                             <div class="dropdown dropdown-action">

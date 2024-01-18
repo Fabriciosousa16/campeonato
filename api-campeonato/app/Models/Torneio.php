@@ -15,4 +15,9 @@ class Torneio extends Model
     {
         return $this->hasMany(Campeonato::class);
     }
+
+    public function fases()
+    {
+        return $this->hasMany(Fase::class);
+    }
 }

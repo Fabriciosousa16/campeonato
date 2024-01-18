@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard\Championship;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Campeonato;
+use App\Models\Status;
 
 
 class ChampionshipController extends Controller
@@ -14,20 +15,21 @@ class ChampionshipController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $campeonato = Campeonato::all();
-
+        
         return response()->json([
-            'campeonato' => $campeonato->map(function($resp){
+            'campeonato' => $campeonato->map(function ($resp) {
+                $status = Status::find($resp->status_id);
+        
                 return [
                     'id' => $resp->id,
                     'name' => $resp->name,
                     'torneio_id' => $resp->torneio_id,
-                    'status_id' => $resp->status_id,
-                    'created_at' => $resp->created_at->format("Y-m-d H:i:s"),
-                    'update_at' => $resp->updated_at->format("Y-m-d H:i:s")
-
+                    'status_id' => $status ? $status->name : null, // Exibe o nome do status se encontrado
+                    'created_at' => $resp->created_at->format("d/m/Y H:i:s"), // Formato brasileiro
+                    'updated_at' => $resp->updated_at->format("d/m/Y H:i:s"), // Formato brasileiro
                 ];
             }),
         ]);
@@ -142,21 +144,25 @@ class ChampionshipController extends Controller
     public function destroy($id)
     {
         try {
-
-            $delete = campeonato::findOrFail($id);
-            
+            $delete = Campeonato::findOrFail($id);
             $delete->delete();
         
             return response()->json([
                 "status" => 200,
-                "message" => "Deletado com Sucesso"
+                "message" => "Campeonato deletado com sucesso."
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                "status" => 404,
+                "message" => "Campeonato não encontrado."
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 "status" => 500,
-                "message" => "Erro ao Deletar o Campeonato",
+                "message" => "Erro ao deletar o campeonato.",
                 "error" => $e->getMessage()
             ]);
         }
+        
     }
 }

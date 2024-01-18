@@ -4,25 +4,28 @@ namespace App\Http\Controllers\Dashboard\Teams;
 
 use App\Http\Controllers\Controller;
 use App\Models\Time;
+use App\Models\Campeonato;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $times = Time::all();
+      // Seu controlador
+        $times = Time::with('campeonato')->get();
 
         return response()->json([
-            'times' => $times->map(function($resp){
+            'times' => $times->map(function ($resp) {
                 return [
                     'id' => $resp->id,
                     'name' => $resp->name,
-                    'campeonato_id' => $resp->campeonato_id,
-                    'created_at' => $resp->created_at->format("Y-m-d H:i:s"),
-                    'update_at' => $resp->updated_at->format("Y-m-d H:i:s")
+                    'campeonato_name' => $resp->campeonato ? $resp->campeonato->name : null, 
+                    'created_at' => $resp->created_at->format("d/m/Y H:i:s"), 
+                    'updated_at' => $resp->updated_at->format("d/m/Y H:i:s"), 
                 ];
             }),
         ]);
+        
     }
     
     /**

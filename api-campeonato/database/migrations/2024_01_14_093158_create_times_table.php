@@ -17,7 +17,6 @@ class CreateTimesTable extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('campeonato_id')->constrained('campeonatos');
-            // outros campos, se necessário
             $table->timestamps();
         });
     }

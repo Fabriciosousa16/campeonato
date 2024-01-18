@@ -28,24 +28,25 @@ export class ListHistoryComponent {
   public totalPages = 0;
 
   public campeonato_id: any;
-  public championshipList: any = [];
+  public historysChampionship: any = [];
 
   constructor(
     public HistoryService: HistoryService,
-    public ChampionshipService: ChampionshipService
   ) {
 
   }
   ngOnInit() {
-    this.getTableData();
+    //this.getTableData();
 
-    this.ChampionshipService.listChampionships().subscribe(
+    this.HistoryService.listHistory().subscribe(
       (resp: any) => {
-        // Verifique se o array championshipsList existe nos dados retornados
-        if (resp && Array.isArray(resp.campeonato)) {
-          this.championshipList = resp.campeonato;
+
+        console.log(resp);
+
+        if (resp && Array.isArray(resp.history)) {
+          this.historysChampionship = resp.history;
         } else {
-          console.error('Array championshipsList não encontrado nos dados retornados.');
+          console.error('Array historyList não encontrado nos dados retornados.');
         }
       },
       (error) => {
@@ -56,17 +57,20 @@ export class ListHistoryComponent {
   }
 
   private getTableData(): void {
+    //
+  }
+
+  filterChampionship() {
     this.historyList = [];
     this.serialNumberArray = [];
 
-    this.HistoryService.listHistory().subscribe((resp: any) => {
-      console.log(resp.historys);  // Corrigir o nome da propriedade para 'historys'
+    this.HistoryService.listHistoryForChampionship(this.campeonato_id).subscribe((resp: any) => {
+      console.log(resp.result);  // Corrigir o nome da propriedade para 'historys'
 
-      // Verifique se resp.historys existe antes de tentar acessar seu comprimento
-      if (resp && resp.historys && Array.isArray(resp.historys)) {
-        this.totalData = resp.historys.length;
+      if (resp && resp.result && Array.isArray(resp.result)) {
+        this.totalData = resp.result.length;
 
-        resp.historys.map((res: any, index: number) => {
+        resp.result.map((res: any, index: number) => {
           const serialNumber = index + 1;
           if (index >= this.skip && serialNumber <= this.limit) {
             this.historyList.push(res);
@@ -77,7 +81,7 @@ export class ListHistoryComponent {
         this.dataSource = new MatTableDataSource<any>(this.historyList);
         this.calculateTotalPages(this.totalData, this.pageSize);
       } else {
-        console.error('A propriedade historys não existe ou não é um array válido:', resp);
+        console.error('A propriedade result não existe ou não é um array válido:', resp);
         // Adicione lógica de tratamento de erro conforme necessário
       }
     });

@@ -16,8 +16,8 @@ export class EditChampionshipComponent {
   valid_form = false;
   valid_form_success = false;
   text_validation: any = null;
-
   role_id: any;
+
   constructor(
     public DataService: DataService,
     public ChampionshipService: ChampionshipService,

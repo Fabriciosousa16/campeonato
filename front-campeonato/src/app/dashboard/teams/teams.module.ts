@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TeamsRoutingModule } from './teams-routing.module';
 import { TeamsComponent } from './teams.component';
 import { MatSelectModule } from '@angular/material/select';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { MatSelectModule } from '@angular/material/select';
   imports: [
     CommonModule,
     TeamsRoutingModule,
+    SharedModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

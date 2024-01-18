@@ -13,6 +13,6 @@ class Time extends Model
 
     public function campeonato()
     {
-        return $this->belongsTo(Campeonato::class);
+        return $this->belongsTo(Campeonato::class, 'campeonato_id');
     }
 }

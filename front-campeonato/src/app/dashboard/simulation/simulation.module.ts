@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SimulationRoutingModule } from './simulation-routing.module';
 import { SimulationComponent } from './simulation.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { SimulationComponent } from './simulation.component';
   imports: [
     CommonModule,
     SimulationRoutingModule,
+    SharedModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

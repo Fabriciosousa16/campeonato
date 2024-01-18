@@ -19,6 +19,7 @@ export class EditTeamsComponent {
   public campeonato_id: any;
   public championshipList: any = [];
   role_id: any;
+
   constructor(
     public DataService: DataService,
     public TeamsService: TeamsService,
@@ -66,7 +67,7 @@ export class EditTeamsComponent {
       this.valid_form = true;
       return;
     }
-    const data = {
+    let data = {
       name: this.name,
       campeonato_id: this.campeonato_id,
     };
@@ -74,7 +75,7 @@ export class EditTeamsComponent {
     this.valid_form_success = false;
     this.text_validation = null;
 
-    this.TeamsService.storeTeams(data).subscribe((resp: any) => {
+    this.TeamsService.editTeams(data, this.role_id).subscribe((resp: any) => {
 
       console.log(resp);
 
@@ -87,7 +88,7 @@ export class EditTeamsComponent {
 
         this.valid_form_success = true;
 
-        const SIDE_BAR = this.sideBar;
+        let SIDE_BAR = this.sideBar;
         this.sideBar = [];
 
         setTimeout(() => {

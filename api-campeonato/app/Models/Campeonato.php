@@ -11,11 +11,6 @@ class Campeonato extends Model
 
     protected $fillable = ['name', 'torneio_id', 'status_id'];
 
-    public function torneio()
-    {
-        return $this->belongsTo(Torneio::class);
-    }
-
     public function status()
     {
         return $this->belongsTo(Status::class);

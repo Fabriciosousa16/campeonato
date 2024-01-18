@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Simulação</a></li>
+                        <li class="breadcrumb-item"><a [routerLink]="[]">Simulação</a></li>
                         <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
                         <li class="breadcrumb-item active">Realizar Simulação</li>
                     </ul>
@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-4 col-xl-4">
+                                <!-- <div class="col-12 col-md-4 col-xl-4">
                                     <div class="form-group local-forms">
                                         <label>Semifinal <span class="login-danger">*</span></label>
 
@@ -96,55 +96,28 @@
                                         <input class="form-control" type="text" [(ngModel)]="name" name="name1"
                                             placeholder="Nome do Time">
                                     </div>
-                                </div>
-
-                                <div class="form-group row" *ngIf="valid_form">
-                                    <div class="col-md-6">
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <strong>Falha na Atuaização!</strong> É necessário<a
-                                                href="javascript:void(0);" class="alert-link"></a>
-                                            adicionar um nome
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close">
-                                                <span aria-hidden="true"> </span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group row" *ngIf="valid_form_success">
-                                    <div class="col-md-6">
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            <strong>Dado Atualizado Com Sucesso!</strong> <a href="javascript:void(0);"
-                                                class="alert-link"></a>
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close">
-                                                <span aria-hidden="true"> </span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <div class="form-group row" *ngIf="text_validation">
-                                    <div class="col-md-6">
-                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                            <strong>!</strong><a href="javascript:void(0);" class="alert-link"></a>
-                                            {{ text_validation}}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                aria-label="Close">
-                                                <span aria-hidden="true"> </span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                </div>
+                                </div> -->
 
                                 <div class="col-12">
                                     <div class="doctor-submit text-end">
+                                        <div class="form-group local-forms">
+                                            <label>Selecionar Partida <span class="login-danger">*</span></label>
+                                            <mat-select [(ngModel)]="campeonato_id"
+                                                [ngModelOptions]="{standalone: true}" class="form-control select"
+                                                placeholder="Selecione Partida">
+                                                <mat-option [value]="null">Selecione uma Partida</mat-option>
+                                                <mat-option *ngFor="let data of simulationMatchList" [value]="data.id">
+                                                    {{ data.fase }} - {{ data.equipe_a }} x {{ data.equipe_b }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </div>
+
+                                        <button *ngIf="showButton" type="submit"
+                                            class="btn btn-primary submit-form me-2"
+                                            (click)="drawTeams()">Sorteio</button>
+
                                         <button type="submit" class="btn btn-primary submit-form me-2"
-                                            (click)="save()">Editar</button>
+                                            (click)="simulateMatch()">Simular Partida</button>
                                         <button type="submit" class="btn btn-primary cancel-form">Cancelar</button>
                                     </div>
                                 </div>

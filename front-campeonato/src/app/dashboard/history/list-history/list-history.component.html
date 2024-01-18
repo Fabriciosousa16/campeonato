@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="#">Histórico de Competições</a></li>
+                        <li class="breadcrumb-item"><a [routerLink]="[]">Histórico de Competições</a></li>
                         <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
                         <li class="breadcrumb-item active">Lista de Hitórico</li>
                     </ul>
@@ -24,49 +24,59 @@
                         <!-- Table Header -->
                         <div class="page-table-header mb-2">
                             <div class="row align-items-center">
-                                <div class="col">
+                                <div class="col-12">
                                     <div class="doctor-table-blk">
-                                        <h3>Histórico de Competições</h3>
-                                        <div class="doctor-search-blk">
+                                        <h3>Histórico de Competições &nbsp;&nbsp;</h3>
 
-                                            <mat-select [(ngModel)]="campeonato_id"
-                                                [ngModelOptions]="{standalone: true}" class="form-control select"
-                                                placeholder="Selecione um Campeonato">
-                                                <mat-option [value]="null">Selecione um Campeonato</mat-option>
-                                                <mat-option *ngFor="let data of championshipList" [value]="data.id">
-                                                    {{data.name}}
-                                                </mat-option>
-                                            </mat-select>
-
-                                            <div class="add-group">
-                                                <a href="javascript:;" class="btn btn-primary doctor-refresh ms-2"><img
-                                                        src="assets/img/icons/re-fresh.svg" alt=""></a>
+                                        <div class="col-12 col-md-6 col-xl-6">
+                                            <div>
+                                                <mat-select [(ngModel)]="campeonato_id"
+                                                    [ngModelOptions]="{standalone: true}" class="form-control select"
+                                                    placeholder="Selecione um Campeonato">
+                                                    <mat-option [value]="null">Selecione um Campeonato</mat-option>
+                                                    <mat-option *ngFor="let data of historysChampionship"
+                                                        [value]="data.id">
+                                                        {{data.name}}
+                                                    </mat-option>
+                                                </mat-select>
                                             </div>
+
                                         </div>
+
+                                        &nbsp;&nbsp;
+
+                                        <div class="col-12 col-md-3 col-xl-2">
+                                            <button type="submit" class="btn btn-primary submit-form me-2"
+                                                (click)="filterChampionship()"> &nbsp;Filtrar&nbsp; </button>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- /Table Header -->
+                        <!-- Table Header -->
+
 
                         <div class="table-responsive">
                             <table matSort (matSortChange)="sortData($event)"
                                 class="table border-0 custom-table comman-table datatable mb-0">
                                 <thead>
                                     <tr>
+                                        <th mat-sort-header="position">Posição</th>
                                         <th mat-sort-header="name">Time</th>
-                                        <th mat-sort-header="department">Campeonato</th>
-                                        <th mat-sort-header="specialization">fase</th>
-
+                                        <th mat-sort-header="championship">Campeonato</th>
+                                        <th mat-sort-header="date">data</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let data of historyList">
+                                    <!-- <tr *ngFor="let data of historyList"> -->
+                                    <tr *ngFor="let data of historyList; let i = index">
 
+                                        <td>{{ i + 1 }}</td>
                                         <td>{{data.time_name}}</td>
                                         <td>{{data.campeonato_name}}</td>
-                                        <td>{{data.fase_name}}</td>
+                                        <td>{{data.data_campeonato}}</td>
 
                                     </tr>
                                 </tbody>
@@ -80,70 +90,6 @@
                                     </div>
                                 </div>
 
-                                <div class="col-sm-12 col-md-7">
-                                    <div class="pagination_section">
-                                        <ul class="pagination">
-                                            <li class="page-item" [ngClass]="{
-                                            disabled: currentPage === 1
-                                          }">
-                                                <a (click)="getMoreData('previous')" class="page-link"
-                                                    href="javascript:void(0);" tabindex="-1">Previous</a>
-                                            </li>
-
-                                            <ng-container *ngFor="let item of pageNumberArray; let i = index">
-                                                <li class="page-item" [class.active]="item === currentPage" [ngClass]="
-                                              (pageNumberArray[currentPage - 2] > item &&
-                                                item !== 1 &&
-                                                pageNumberArray.length > 6) ||
-                                              (pageNumberArray[currentPage] < item &&
-                                                item !== 1 &&
-                                                pageNumberArray.length > 6 &&
-                                                pageNumberArray.length !== item)
-                                                ? 'hide-page-no'
-                                                : 'show-page-no'
-                                            ">
-                                                    <a (click)="moveToPage(item)" class="page-link"
-                                                        href="javascript:void(0);">
-                                                        {{ item }}
-                                                    </a>
-                                                </li>
-                                                <li class="page-item" *ngIf="
-                                              i === 0 &&
-                                              pageNumberArray.length > 6 &&
-                                              currentPage > 2
-                                            " [hidden]="currentPage === 1" (click)="moveToPage(currentPage - 2)">
-                                                    <a class="page-link" href="javascript:void(0);">
-                                                        ...
-                                                    </a>
-                                                </li>
-                                                <li *ngIf="
-                                              i === pageNumberArray.length - 2 &&
-                                              pageNumberArray.length > 6
-                                            " [hidden]="
-                                              currentPage >=
-                                                pageNumberArray[pageNumberArray.length - 2] ||
-                                              totalData <
-                                                serialNumberArray[serialNumberArray.length - 1]
-                                            " class="page-item" (click)="moveToPage(currentPage + 2)">
-                                                    <a class="page-link" href="javascript:void(0);">
-                                                        ...
-                                                    </a>
-                                                </li>
-                                            </ng-container>
-
-                                            <li class="page-item" [ngClass]="{
-                                            disabled:
-                                              currentPage ===
-                                                pageNumberArray[pageNumberArray.length - 1] ||
-                                                historyList.length === 0
-                                          }">
-                                                <a (click)="getMoreData('next')" class="page-link"
-                                                    href="javascript:void(0);">Next
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
                             </div>
 
                         </div>

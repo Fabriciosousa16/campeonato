@@ -9,6 +9,7 @@ import { ListChampionshipComponent } from './list-championship/list-championship
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     ChampionshipRoutingModule,
+    SharedModule,
+
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

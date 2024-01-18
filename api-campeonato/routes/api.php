@@ -35,29 +35,28 @@ Route::group([
     Route::post('/me', [AuthController::class, 'me'])->name('me');
 });
 
-// Route::group(['middleware' => 'auth:api'], function () {
-//     Route::resource("championship", ChampionshipController::class);
-//     Route::resource("teams", TeamsController::class);
-//     Route::resource("simulation", SimulationController::class);
-//     Route::resource("history", HistoryController::class);
+//Route::group(['middleware' => 'auth:api'], function () {
 
-//     // Rota personalizada para chamar prizeDraw
-//     Route::post('simulation/prize-draw', [SimulationController::class, 'prizeDraw']);
-//     Route::get('simulation/resultados', [SimulationController::class, 'getResults']);
-
-// });
-
-Route::group([], function () {
+Route::group(['middleware' => 'auth:api'], function () {
     Route::resource("championship", ChampionshipController::class);
     Route::resource("teams", TeamsController::class);
     Route::resource("simulation", SimulationController::class);
     Route::resource("history", HistoryController::class);
 
-    // Rota personalizada para chamar prizeDraw
-    Route::post('simulation/prize-draw', [SimulationController::class, 'prizeDraw']);
-    Route::post('simulation/simulate-game/{id}', [SimulationController::class, 'simulateGame']);
+    
+    Route::post('simulation/prize-draw/{id}', [SimulationController::class, 'prizeDraw']);
     Route::post('simulation/generate-semi-finals', [SimulationController::class, 'generateSemifinals']);
     Route::post('simulation/generate-third-place-match', [SimulationController::class, 'generateThirdPlaceMatch']);
     Route::post('simulation/generate-final-match', [SimulationController::class, 'generateFinalMatch']);
+
+    // Route::post('simulation/verify-exist-simulation/{id}', [SimulationController::class, 'countResultsForChampionship']);
+    Route::post('simulation/verify-exist-simulation/{id}', [SimulationController::class, 'verifyFases']);
     
+   
+    Route::get('simulation/list/match/{id}', [SimulationController::class, 'listForMatch']);
+
+    Route::put('simulation/match/{id}', [SimulationController::class, 'simulateGame']);
+
+    Route::get("history/list/championship/{id}", [HistoryController::class, 'listHistoryForChampionship']);
+ 
 });

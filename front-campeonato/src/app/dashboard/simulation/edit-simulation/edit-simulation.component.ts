@@ -1,7 +1,7 @@
 import { SimulationService } from './../../../shared/simulation/simulation.service';
 import { Component } from '@angular/core';
 import { DataService } from 'src/app/shared/data/data.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-simulation',
@@ -11,17 +11,22 @@ import { ActivatedRoute } from '@angular/router';
 export class EditSimulationComponent {
   sideBar: any = [];
   name = '';
-  torneio_id = 1;
-  status_id = 1;
   valid_form = false;
   valid_form_success = false;
   text_validation: any = null;
 
+  public campeonato_id: any;
+  public simulationMatchList: any = [];
+
   role_id: any;
+  showButton = false;
+
   constructor(
     public DataService: DataService,
     public SimulationService: SimulationService,
-    public activedRoute: ActivatedRoute
+    public activedRoute: ActivatedRoute,
+    private router: Router
+
   ) { }
 
   ngOnInit() {
@@ -30,50 +35,97 @@ export class EditSimulationComponent {
       this.role_id = resp.id;
     });
     this.showRole();
+    this.showButtonExistSimulation();
   }
 
+  // Mostrar Lista de Partidas entre as equipes que não se enfrentaram ainda
   showRole() {
-    this.SimulationService.showSimulation(this.role_id).subscribe((resp: any) => {
-      console.log(resp);
-      this.name = resp.name;
-    })
+    // this.SimulationService.showSimulation(this.role_id).subscribe((resp: any) => {
+    //   console.log(resp);
+    //   // this.name = resp.name;
+    // });
+
+    this.SimulationService.listMatchSimulation(this.role_id).subscribe(
+      (resp: any) => {
+        // Verifique se o array championshipsList existe nos dados retornados
+        if (resp && Array.isArray(resp.resultado)) {
+          this.simulationMatchList = resp.resultado;
+        } else {
+          console.error('Array simulationMatchList não encontrado nos dados retornados.');
+        }
+      },
+      (error) => {
+        console.error('Erro ao obter lista de Partidas:', error);
+      }
+    );
   }
 
-  save() {
-    this.valid_form = false;
-    if (!this.name) {
-      this.valid_form = true;
-      return;
-    }
-    let data = {
-      name: this.name,
-      torneio_id: this.torneio_id,
-      status_id: this.status_id
-    };
+  // Mostrar botão para realizar sorteio, caso campeonato esteja apenas no nivel 1 (Aberto)
+  showButtonExistSimulation() {
+    this.SimulationService.verifyExistSimulation(this.role_id).subscribe(
+      (resp: any) => {
+        // Adiciona log para verificar se 'quantidade' está presente
+        // console.log('Quantidade presente:', resp && resp.quant !== undefined);
 
-    this.valid_form_success = false;
-    this.text_validation = null;
+        // Verifica se a resposta não é nula e possui a propriedade 'quantidade'
+        if (resp && resp.quant !== undefined) {
+          // console.log('Quantidade:', resp.quant);
 
-    this.SimulationService.editSimulation(data, this.role_id).subscribe((resp: any) => {
-
-      console.log(resp);
-
-      if (resp.status == 403) {
-        this.text_validation = resp.message;
-      } else {
-        this.name = '';
-        this.torneio_id = 1;
-        this.status_id = 1;
-        this.valid_form_success = true;
-
-        let SIDE_BAR = this.sideBar;
-        this.sideBar = [];
-
-        setTimeout(() => {
-          this.sideBar = SIDE_BAR;
-        }, 50);
+          // Verifica se 'quantidade' é menor ou igual a 0
+          this.showButton = resp.quant <= 0;
+        } else {
+          // console.log('Resposta da API não possui a propriedade "quantidade".');
+          // Trate conforme necessário, como definir this.showButton para um valor padrão
+        }
+      },
+      (error) => {
+        console.error('Erro ao verificar existência da simulação', error);
       }
+    );
+  }
 
-    })
+  //Realizar o sorteio das equipes (Soteio Inicial)
+  drawTeams() {
+    this.SimulationService.drawSimulation(this.role_id).subscribe(
+
+      (response: any) => {
+        // Lógica para tratar a resposta após o sorteio, se necessário
+        console.log('Resultado do sorteio:', response);
+
+        this.reloadPage();
+
+      },
+      (error) => {
+        console.error('Erro ao realizar sorteio das equipes', error);
+        // Pode tratar o erro aqui, se necessário
+      }
+    );
+  }
+
+  reloadPage() {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['simulation/list/edit/' + this.role_id]);  // Substitua 'sua-rota-aqui' pela rota atual
+    });
+  }
+
+  // Simular Partida do campeonto
+  simulateMatch() {
+
+    console.log('Campeonato ID:', this.campeonato_id);
+
+    this.SimulationService.simulateMatch(this.campeonato_id).subscribe(
+
+      (response: any) => {
+        // Lógica para tratar a resposta após o sorteio, se necessário
+        console.log('Partida Simulada:', response);
+
+        // Recarregar a página após a simulação
+        this.reloadPage();
+      },
+      (error) => {
+        console.error('Erro ao simular Patida', error);
+        // Pode tratar o erro aqui, se necessário
+      }
+    );
   }
 }

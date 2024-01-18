@@ -21,6 +21,18 @@ const routes: Routes = [
         loadChildren: () =>
           import('./teams/teams.module').then((m) => m.TeamsModule),
       },
+
+      {
+        path: 'simulation',
+        loadChildren: () =>
+          import('./simulation/simulation.module').then((m) => m.SimulationModule),
+      },
+
+      {
+        path: 'history',
+        loadChildren: () =>
+          import('./history/history.module').then((m) => m.HistoryModule),
+      },
     ]
   }
 ];

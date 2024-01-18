@@ -9,10 +9,15 @@ class Fase extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name','torneio_id'];
 
     public function resultados()
     {
         return $this->hasMany(Resultado::class);
+    }
+
+    public function torneio()
+    {
+        return $this->belongsTo(Torneio::class);
     }
 }

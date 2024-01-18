@@ -21,4 +21,9 @@ export class HistoryService {
     return this.http.get(URL, { headers: headers });
   }
 
+  listHistoryForChampionship(id: any) {
+    const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
+    const URL = URL_SEVICES + "/history/list/championship/" + id;
+    return this.http.get(URL, { headers: headers });
+  }
 }
