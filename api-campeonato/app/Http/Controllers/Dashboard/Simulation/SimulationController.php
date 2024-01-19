@@ -10,7 +10,8 @@ use App\Models\Resultado;
 use App\Models\Status;
 use App\Models\Torneio;
 use App\Models\Fase;
-
+use App\Models\Penalty;
+use Illuminate\Support\Facades\Log;
 
 class SimulationController extends Controller
 {
@@ -223,6 +224,53 @@ class SimulationController extends Controller
         }
     }    
 
+    public function simulateGame($id) 
+    {
+    // Encontrar o resultado pelo ID
+        $resultado = Resultado::find($id);
+
+        // Verificar se o resultado foi encontrado
+        if (!$resultado) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Resultado não encontrado.',
+                'id'=>$id
+            ], 404);
+        }
+
+        // Verificar se o jogo já foi simulado
+        if ($resultado->gols_equipe_a !== null && $resultado->gols_equipe_b !== null) {
+            return response()->json([
+                'status' => 400,
+                'message' => 'Este jogo já foi simulado anteriormente.',
+            ], 400);
+        }
+
+        // Simular o jogo (gerar gols aleatórios, por exemplo)
+        $golsEquipeA = random_int(0, 5); // Simulação de gols para a equipe A
+        $golsEquipeB = random_int(0, 5); // Simulação de gols para a equipe B
+
+        // Atualizar o resultado com os gols simulados
+        $resultado->update([
+            'gols_equipe_a' => $golsEquipeA,
+            'gols_equipe_b' => $golsEquipeB,
+        ]);
+
+        // Verificar se os gols são iguais
+        if ($golsEquipeA == $golsEquipeB) { 
+            $this->disputaPenaltys($id);
+        }
+
+        $this->verifyFases($resultado->campeonato_id);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Simulação realizada com sucesso.',
+            'gols_equipe_a' => $golsEquipeA,
+            'gols_equipe_b' => $golsEquipeB,
+        ]);
+    }
+
     public function verifyFases($id)
     {
         try {
@@ -273,142 +321,129 @@ class SimulationController extends Controller
         }
     }
 
-
-    public function simulateGame($id) 
-    {
-    // Encontrar o resultado pelo ID
-        $resultado = Resultado::find($id);
-
-        // Verificar se o resultado foi encontrado
-        if (!$resultado) {
-            return response()->json([
-                'status' => 404,
-                'message' => 'Resultado não encontrado.',
-                'id'=>$id
-            ], 404);
-        }
-
-        // Verificar se o jogo já foi simulado
-        if ($resultado->gols_equipe_a !== null && $resultado->gols_equipe_b !== null) {
-            return response()->json([
-                'status' => 400,
-                'message' => 'Este jogo já foi simulado anteriormente.',
-            ], 400);
-        }
-
-        // Simular o jogo (gerar gols aleatórios, por exemplo)
-        $golsEquipeA = random_int(0, 5); // Simulação de gols para a equipe A
-        $golsEquipeB = random_int(0, 5); // Simulação de gols para a equipe B
-
-        // Atualizar o resultado com os gols simulados
-        $resultado->update([
-            'gols_equipe_a' => $golsEquipeA,
-            'gols_equipe_b' => $golsEquipeB,
-        ]);
-
-        return response()->json([
-            'status' => 200,
-            'message' => 'Simulação realizada com sucesso.',
-            'gols_equipe_a' => $golsEquipeA,
-            'gols_equipe_b' => $golsEquipeB,
-        ]);
-    }
-
     public function generateSemifinals($id)
     {
-        
-        // Verificar se a fase anterior (quartas de finais) foi concluída
         $quartasFinaisConcluidas = Resultado::where('fase_id', 1)
             ->where('campeonato_id', $id)
+            ->whereNotNull('gols_equipe_a')
+            ->whereNotNull('gols_equipe_b')
             ->count() == 4;
-
+    
         if (!$quartasFinaisConcluidas) {
             return response()->json([
                 'status' => 403,
                 'message' => 'A fase anterior (quartas de finais) não foi concluída ainda para o campeonato ' . $id . '.',
             ]);
         }
-
-        // Obter os resultados das quartas de finais
-    $resultadosQuartasFinais = Resultado::where('fase_id', 1)
-    ->where('campeonato_id', $id)
-    ->get(['equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b']);
-
-    // Inicializar um array para rastrear as equipes vencedoras
-    $vencedoresQuartasFinais = [];
-
-    // Determinar as equipes vencedoras
-    foreach ($resultadosQuartasFinais as $resultado) {
-    if ($resultado->gols_equipe_a > $resultado->gols_equipe_b) {
-        $vencedoresQuartasFinais[] = $resultado->equipe_a_id;
-    } elseif ($resultado->gols_equipe_a < $resultado->gols_equipe_b) {
-        $vencedoresQuartasFinais[] = $resultado->equipe_b_id;
-    } else {
-        // Em caso de empate, você pode adotar alguma lógica específica, como sorteio ou critérios de desempate
-        // Por enquanto, deixaremos como está (nenhuma equipe vencedora)
-    }
-    }
-
-    // Verificar se há equipes suficientes para gerar as semifinais
-    if (count($vencedoresQuartasFinais) >= 2) {
-    // Dividir os vencedores em pares para as semifinais
-    $semifinais = array_chunk($vencedoresQuartasFinais, 2);
-
-    // Inserir os novos jogos das semifinais
-    foreach ($semifinais as $confronto) {
-        $resultado = new Resultado([
-            'fase_id' => 2,
-            'campeonato_id' => $id,
-            'equipe_a_id' => $confronto[0],
-            'equipe_b_id' => $confronto[1],
-            'gols_equipe_a' => null,
-            'gols_equipe_b' => null,
-        ]);
-        $resultado->save();
-    }
-
-    return response()->json([
-        'status' => 200,
-        'message' => 'Semifinais geradas com sucesso para o campeonato ' . $id . '.',
-        'semifinais' => $semifinais,
-    ]);
-    } else {
-    return response()->json([
-        'status' => 403,
-        'message' => 'Não há equipes suficientes para gerar as semifinais para o campeonato ' . $id . '.',
-    ]);
-    }
-
+    
+        $resultadosQuartasFinais = Resultado::where('fase_id', 1)
+            ->where('campeonato_id', $id)
+            ->get(['id', 'equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b']);
+    
+        $vencedoresQuartasFinais = [];
+    
+        foreach ($resultadosQuartasFinais as $resultado) {
+            if ($resultado->gols_equipe_a > $resultado->gols_equipe_b) {
+                $vencedoresQuartasFinais[] = $resultado->equipe_a_id;
+            } elseif ($resultado->gols_equipe_a < $resultado->gols_equipe_b) {
+                $vencedoresQuartasFinais[] = $resultado->equipe_b_id;
+            } else {
+                // O jogo está empatado, verificar na tabela "Penalty"
+                $penalty = Penalty::where('resultado_id', $resultado->id)->first();
+    
+                if ($penalty) {
+                    // Verificar qual equipe teve mais gols na tabela "Penalty"
+                    if ($penalty->gols_equipe_a > $penalty->gols_equipe_b) {
+                        $vencedoresQuartasFinais[] = $resultado->equipe_a_id;
+                    } elseif ($penalty->gols_equipe_a < $penalty->gols_equipe_b) {
+                        $vencedoresQuartasFinais[] = $resultado->equipe_b_id;
+                    } else {
+                        // Lógica adicional se ainda estiver empatado após o desempate por pênaltis
+                        // Aqui você pode adicionar uma lógica específica para o caso de empate nos pênaltis
+                        // Se necessário
+                    }
+                } else {
+                    // Lógica adicional se não houver informações de pênaltis na tabela "Penalty"
+                }
+            }
+        }
+    
+        if (count($vencedoresQuartasFinais) == 4) {
+            $semifinais = array_chunk($vencedoresQuartasFinais, 2);
+    
+            foreach ($semifinais as $confronto) {
+                $resultado = new Resultado([
+                    'fase_id' => 2,
+                    'campeonato_id' => $id,
+                    'equipe_a_id' => $confronto[0],
+                    'equipe_b_id' => $confronto[1],
+                    'gols_equipe_a' => null,
+                    'gols_equipe_b' => null,
+                ]);
+                $resultado->save();
+            }
+    
+            return response()->json([
+                'status' => 200,
+                'message' => 'Semifinais geradas com sucesso para o campeonato ' . $id . '.',
+                'semifinais' => $semifinais,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 403,
+                'message' => 'Não há equipes suficientes para gerar as semifinais para o campeonato ' . $id . '.',
+            ]);
+        }
     }
 
     public function generateThirdPlaceMatch($id)
     {
-
-        // Obter as equipes que perderam nas semifinais
         $perdedoresSemifinais = Resultado::where('fase_id', 2)
             ->where('campeonato_id', $id)
-            ->get(['equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b'])
-            ->map(function ($resultado) {
-                return $resultado->gols_equipe_a > $resultado->gols_equipe_b
-                    ? $resultado->equipe_b_id
-                    : $resultado->equipe_a_id;
-            });
-
+            ->get(['id', 'equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b']);
+    
+        $equipesTerceiroLugar = [];
+    
+        foreach ($perdedoresSemifinais as $resultado) {
+            if ($resultado->gols_equipe_a > $resultado->gols_equipe_b) {
+                $equipesTerceiroLugar[] = $resultado->equipe_b_id;
+            } elseif ($resultado->gols_equipe_a < $resultado->gols_equipe_b) {
+                $equipesTerceiroLugar[] = $resultado->equipe_a_id;
+            } else {
+                // O jogo está empatado, verificar na tabela "Penalty"
+                $penalty = Penalty::where('resultado_id', $resultado->id)->first();
+    
+                if ($penalty) {
+                    // Verificar qual equipe teve mais gols na tabela "Penalty"
+                    if ($penalty->gols_equipe_a > $penalty->gols_equipe_b) {
+                        $equipesTerceiroLugar[] = $resultado->equipe_b_id;
+                    } elseif ($penalty->gols_equipe_a < $penalty->gols_equipe_b) {
+                        $equipesTerceiroLugar[] = $resultado->equipe_a_id;
+                    } else {
+                        // Lógica adicional se ainda estiver empatado após o desempate por pênaltis
+                        // Se necessário
+                    }
+                } else {
+                    // Lógica adicional se não houver informações de pênaltis na tabela "Penalty"
+                }
+            }
+        }
+    
         // Verificar se há equipes suficientes para gerar a disputa de terceiro lugar
-        if ($perdedoresSemifinais->count() >= 2) {
+        if (count($equipesTerceiroLugar) == 2) {
             // Inserir o jogo da disputa de terceiro lugar
             $resultado = new Resultado([
                 'fase_id' => 3,
                 'campeonato_id' => $id,
-                'equipe_a_id' => $perdedoresSemifinais[0],
-                'equipe_b_id' => $perdedoresSemifinais[1],
+                'equipe_a_id' => $equipesTerceiroLugar[0],
+                'equipe_b_id' => $equipesTerceiroLugar[1],
             ]);
             $resultado->save();
-
+    
             return response()->json([
                 'status' => 200,
                 'message' => 'Disputa de terceiro lugar gerada com sucesso para o campeonato ' . $id . '.',
-                'terceiro_lugar' => $perdedoresSemifinais,
+                'terceiro_lugar' => $equipesTerceiroLugar,
             ]);
         } else {
             return response()->json([
@@ -417,37 +452,58 @@ class SimulationController extends Controller
             ]);
         }
     }
-
-
+    
+    
     public function generateFinalMatch($id)
     {
         // Obter as equipes que venceram nas semifinais
         $vencedoresSemifinais = Resultado::where('fase_id', 2)
             ->where('campeonato_id', $id)
-            ->get(['equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b'])
-            ->map(function ($resultado) {
-                return $resultado->gols_equipe_a > $resultado->gols_equipe_b
-                    ? $resultado->equipe_a_id
-                    : $resultado->equipe_b_id;
-            });
-
+            ->get(['id', 'equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b']);
+    
+        $equipesFinal = [];
+    
+        foreach ($vencedoresSemifinais as $resultado) {
+            if ($resultado->gols_equipe_a > $resultado->gols_equipe_b) {
+                $equipesFinal[] = $resultado->equipe_a_id;
+            } elseif ($resultado->gols_equipe_a < $resultado->gols_equipe_b) {
+                $equipesFinal[] = $resultado->equipe_b_id;
+            } else {
+                // O jogo está empatado, verificar na tabela "Penalty"
+                $penalty = Penalty::where('resultado_id', $resultado->id)->first();
+    
+                if ($penalty) {
+                    // Verificar qual equipe teve mais gols na tabela "Penalty"
+                    if ($penalty->gols_equipe_a > $penalty->gols_equipe_b) {
+                        $equipesFinal[] = $resultado->equipe_a_id;
+                    } elseif ($penalty->gols_equipe_a < $penalty->gols_equipe_b) {
+                        $equipesFinal[] = $resultado->equipe_b_id;
+                    } else {
+                        // Lógica adicional se ainda estiver empatado após o desempate por pênaltis
+                    }
+                } else {
+                    // Lógica adicional se não houver informações de pênaltis na tabela "Penalty"
+                }
+            }
+        }
+    
         // Verificar se há equipes suficientes para gerar a final
-        if ($vencedoresSemifinais->count() >= 2) {
+        if (count($equipesFinal) == 2) {
             // Inserir o jogo da final
             $resultado = new Resultado([
                 'fase_id' => 4,
                 'campeonato_id' => $id,
-                'equipe_a_id' => $vencedoresSemifinais[0],
-                'equipe_b_id' => $vencedoresSemifinais[1],
+                'equipe_a_id' => $equipesFinal[0],
+                'equipe_b_id' => $equipesFinal[1],
                 'gols_equipe_a' => null,
                 'gols_equipe_b' => null,
             ]);
             $resultado->save();
-
+    
             return response()->json([
                 'status' => 200,
                 'message' => 'Final gerada com sucesso para o campeonato ' . $id . '.',
-                'final' => $vencedoresSemifinais,
+                'final' => $equipesFinal,
             ]);
         } else {
             return response()->json([
@@ -456,4 +512,79 @@ class SimulationController extends Controller
             ]);
         }
     }
+    
+    
+    public function disputaPenaltys($resultadoId)
+    {
+        // Obter o resultado do jogo para acessar informações das equipes
+        $resultado = Resultado::find($resultadoId);
+        
+        if (!$resultado) {
+            // Lida com a situação em que o resultado não foi encontrado
+            return response()->json([
+                'status' => 404,
+                'message' => 'Resultado não encontrado.',
+                'resultado_id' => $resultadoId,
+            ], 404);
+        }
+        
+        // Simular a disputa de pênaltis
+        $golsEquipeA = 0;
+        $golsEquipeB = 0;
+        
+        $rodadasIniciais = 5; // Número inicial de rodadas regulares
+        $cobrancasAlternadas = 0;
+        
+        // Converter 70% de chance para uma faixa de 0 a 6 (por exemplo)
+        $intervaloGol = 6;
+        
+        // Simulação das rodadas regulares
+        for ($i = 0; $i < $rodadasIniciais; $i++) {
+            // Gere valores aleatórios para os gols de cada equipe (70% de chance de sucesso)
+            $golAleatorioEquipeA = (random_int(0, $intervaloGol) < 5) ? 1 : 0; // 70% de chance de sucesso
+            $golAleatorioEquipeB = (random_int(0, $intervaloGol) < 5) ? 1 : 0; // 70% de chance de sucesso
+        
+            // Adicione os gols gerados ao placar
+            $golsEquipeA += $golAleatorioEquipeA;
+            $golsEquipeB += $golAleatorioEquipeB;
+        
+            $cobrancasAlternadas++;
+            
+            // Verificar se uma equipe já venceu e a outra não pode mais alcançar
+            if ($golsEquipeA > $golsEquipeB + (10 - $cobrancasAlternadas)) {
+                break;
+            } elseif ($golsEquipeB > $golsEquipeA + (10 - $cobrancasAlternadas)) {
+                break;
+            }
+        }
+        
+        // Continuar a simulação de rodadas até que haja um vencedor
+        while ($golsEquipeA === $golsEquipeB && $cobrancasAlternadas < 10) {
+            // Gere valores aleatórios para os gols de cada equipe (70% de chance de sucesso)
+            $golAleatorioEquipeA = (random_int(0, $intervaloGol) < 5) ? 1 : 0;
+            $golAleatorioEquipeB = (random_int(0, $intervaloGol) < 5) ? 1 : 0;
+
+            $golsEquipeA += $golAleatorioEquipeA;
+            $golsEquipeB += $golAleatorioEquipeB;
+
+            $cobrancasAlternadas++;
+        }
+        
+        // Salvar os resultados na tabela 'penaltys'
+        $penalty = new Penalty([
+            'resultado_id' => $resultadoId,
+            'gols_equipe_a' => $golsEquipeA,
+            'gols_equipe_b' => $golsEquipeB,
+        ]);
+        $penalty->save();
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'Disputa de pênaltis simulada com sucesso.',
+            'gols_equipe_a' => $golsEquipeA,
+            'gols_equipe_b' => $golsEquipeB,
+            'cobrancas_alternadas' => $cobrancasAlternadas,
+        ]);
+    }
+        
 }

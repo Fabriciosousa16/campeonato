@@ -58,6 +58,12 @@ export class SimulationService {
     return this.http.post(URL, {}, { headers: headers });
   }
 
+  verifyFasesSimulation(id: number) {
+    const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
+    const URL = URL_SEVICES + "/simulation/verify-fases-simulation/" + id;
+    return this.http.post(URL, {}, { headers: headers });
+  }
+
   //Realizar sorteio inicial
   drawSimulation(id: number) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });

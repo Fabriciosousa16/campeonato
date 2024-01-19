@@ -100,6 +100,7 @@ export class EditSimulationComponent {
         // Pode tratar o erro aqui, se necessário
       }
     );
+
   }
 
   reloadPage() {

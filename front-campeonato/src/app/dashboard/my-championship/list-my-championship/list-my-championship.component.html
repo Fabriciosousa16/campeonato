@@ -1,0 +1,75 @@
+<div class="page-wrapper">
+    <div class="content">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a [routerLink]="routes.Dashboard">Dashboard </a></li>
+                        <li class="breadcrumb-item"><i class="feather icon-chevron-right"></i></li>
+                        <li class="breadcrumb-item active">Meu Campeonato</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
+
+        <div class="good-morning-blk">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="morning-user">
+                        <h2>Bem Vindo, <span>Admin</span></h2>
+                        <p>Tenha um Ótimo Dia</p>
+                    </div>
+                </div>
+                <div class="col-md-6 position-blk">
+                    <div class="morning-img">
+                        <img src="assets/img/morning-img-01.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <div class="dash-boxs comman-flex-center">
+                        <img src="assets/img/icons/profile-add.svg" alt="">
+                    </div>
+                    <div class="dash-content dash-count">
+                        <h4>Abertos</h4>
+                        <h2><span class="counter-up" [countUp]="abertos" [options]="{duration: 10}">{{ abertos }}</span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <div class="dash-boxs comman-flex-center">
+                        <img src="assets/img/icons/profile-add.svg" alt="">
+                    </div>
+                    <div class="dash-content dash-count">
+                        <h4>Em Andamento</h4>
+                        <h2><span class="counter-up" [countUp]="emAndamento" [options]="{duration: 10}">{{ emAndamento
+                                }}</span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <div class="dash-boxs comman-flex-center">
+                        <img src="assets/img/icons/scissor.svg" alt="">
+                    </div>
+                    <div class="dash-content dash-count">
+                        <h4>Finalizados</h4>
+                        <h2><span class="counter-up" [countUp]="finalizados" [options]="{duration: 10}">{{ finalizados
+                                }}</span></h2>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>

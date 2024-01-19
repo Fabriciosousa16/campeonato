@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Dashboard\Championship\ChampionshipController;
+use App\Http\Controllers\Dashboard\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\Historry\HistoryController;
 use App\Http\Controllers\Dashboard\Simulation\SimulationController;
 use App\Http\Controllers\Dashboard\Teams\TeamsController;
@@ -37,11 +38,13 @@ Route::group([
 
 //Route::group(['middleware' => 'auth:api'], function () {
 
-Route::group(['middleware' => 'auth:api'], function () {
+Route::group([], function () {
     Route::resource("championship", ChampionshipController::class);
     Route::resource("teams", TeamsController::class);
     Route::resource("simulation", SimulationController::class);
     Route::resource("history", HistoryController::class);
+
+    Route::resource("my-championship", DashboardController::class);
 
     
     Route::post('simulation/prize-draw/{id}', [SimulationController::class, 'prizeDraw']);
@@ -49,8 +52,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('simulation/generate-third-place-match', [SimulationController::class, 'generateThirdPlaceMatch']);
     Route::post('simulation/generate-final-match', [SimulationController::class, 'generateFinalMatch']);
 
-    // Route::post('simulation/verify-exist-simulation/{id}', [SimulationController::class, 'countResultsForChampionship']);
-    Route::post('simulation/verify-exist-simulation/{id}', [SimulationController::class, 'verifyFases']);
+    Route::post('simulation/verify-exist-simulation/{id}', [SimulationController::class, 'countResultsForChampionship']);
+   // Route::post('simulation/verify-fases-simulation/{id}', [SimulationController::class, 'verifyFases']);
     
    
     Route::get('simulation/list/match/{id}', [SimulationController::class, 'listForMatch']);
@@ -58,5 +61,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::put('simulation/match/{id}', [SimulationController::class, 'simulateGame']);
 
     Route::get("history/list/championship/{id}", [HistoryController::class, 'listHistoryForChampionship']);
+
+    Route::post('simulation/disputa-penaltys/{id}', [SimulationController::class, 'disputaPenaltys']);
+
  
 });

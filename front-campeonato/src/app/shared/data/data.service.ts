@@ -17,7 +17,7 @@ export class DataService {
           menuValue: 'Dashboard',
           hasSubRoute: true,
           showSubRoute: false,
-          base: 'dashboard',
+          base: 'mychampionship',
           route: 'dashboard',
           img: 'assets/img/icons/menu-icon-01.svg',
           subMenus: [

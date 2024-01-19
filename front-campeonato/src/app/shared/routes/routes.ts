@@ -12,7 +12,7 @@ export class routes {
     return this.baseUrl + '/register';
   }
   public static get Dashboard(): string {
-    return this.baseUrl + '/dashboard/dashboard';
+    return this.baseUrl + '/dashboard';
   }
   public static get addChampionship(): string {
     return this.baseUrl + '/championship/register';
@@ -46,5 +46,9 @@ export class routes {
   }
   public static get error500(): string {
     return this.baseUrl + '/error/error500';
+  }
+
+  public static get myChampionship(): string {
+    return this.baseUrl + '/my-championship/list';
   }
 }
