@@ -45,7 +45,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::resource("history", HistoryController::class);
 
     Route::resource("my-championship", DashboardController::class);
-
     
     Route::post('simulation/prize-draw/{id}', [SimulationController::class, 'prizeDraw']);
     Route::post('simulation/generate-semi-finals', [SimulationController::class, 'generateSemifinals']);
@@ -64,6 +63,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get("history/list/championship/{id}", [HistoryController::class, 'listHistoryForChampionship']);
 
     Route::post('simulation/disputa-penaltys/{id}', [SimulationController::class, 'disputaPenaltys']);
-
  
 });

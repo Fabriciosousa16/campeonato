@@ -30,6 +30,10 @@ Definir horario de brasilia.
 
 SET time_zone = '-03:00';
 _____________________________________________________________________________________________
+Para efetuar os comandos a sequier é necessário está na pasta campeonato/front-campeonato
+
+npm install
+
 
 Para efetuar os comandos a sequier é necessário está na pasta campeonato/api-campeonato
 
