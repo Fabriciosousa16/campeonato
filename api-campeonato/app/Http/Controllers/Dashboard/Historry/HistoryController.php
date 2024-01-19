@@ -61,7 +61,7 @@ class HistoryController extends Controller
                     ->where('r.fase_id', 3);
             })
             ->leftJoin('penaltys as p', 'r.id', '=', 'p.resultado_id')
-            ->where('c.id', 4);
+            ->where('c.id', $id);
         
         $subqueryFase3B = DB::table('times as t')
             ->select(
@@ -79,7 +79,7 @@ class HistoryController extends Controller
                     ->where('r.fase_id', 3);
             })
             ->leftJoin('penaltys as p', 'r.id', '=', 'p.resultado_id')
-            ->where('c.id', 4);
+            ->where('c.id', $id);
         
         // Fase 4 - Final
         $subqueryFase4A = DB::table('times as t')
@@ -98,7 +98,7 @@ class HistoryController extends Controller
                     ->where('r.fase_id', 4);
             })
             ->leftJoin('penaltys as p', 'r.id', '=', 'p.resultado_id')
-            ->where('c.id', 4);
+            ->where('c.id', $id);
         
         $subqueryFase4B = DB::table('times as t')
             ->select(
@@ -116,7 +116,7 @@ class HistoryController extends Controller
                     ->where('r.fase_id', 4);
             })
             ->leftJoin('penaltys as p', 'r.id', '=', 'p.resultado_id')
-            ->where('c.id', 4);
+            ->where('c.id', $id);
         
         // Unir os resultados
         $resultados = $subqueryFase3A
