@@ -157,6 +157,80 @@ class SimulationController extends Controller
         }
     }    
 
+    public function prizeDraw($id)
+    {
+        try {
+        
+            $countTimes = Time::where('campeonato_id', $id)->count();
+
+            $quantidadeResultadosFase1 = Resultado::where('campeonato_id', $id)
+            ->where('fase_id', 1)
+            ->count();
+
+            if ($countTimes !== 8) {
+        
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'O sorteio só pode ser realizado se houver exatamente 8 times cadastrados no campeonato.'
+                ]);
+            }
+
+            if ($quantidadeResultadosFase1 >= 4) {
+        
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'O sorteio da fase 1 já foi realizado.',
+                    'quantidade' => $quantidadeResultadosFase1,
+                ]);
+            }
+        
+            $equipes = Time::join('campeonatos', 'times.campeonato_id', '=', 'campeonatos.id')
+                ->where('times.campeonato_id', $id)
+                ->where('campeonatos.status_id', 1)
+                ->get(['times.id']);
+
+            $equipesEmbaralhadas = $equipes->shuffle()->all();
+
+            $paresDeEquipes = array_chunk($equipesEmbaralhadas, 2);
+
+            $equipesEmparelhadas = [];
+
+            foreach ($paresDeEquipes as $par) {
+                $equipeAId = optional($par[0])['id'];
+                $equipeBId = optional($par[1])['id'];
+
+                if ($equipeAId && $equipeBId && !in_array($equipeAId, $equipesEmparelhadas) && !in_array($equipeBId, $equipesEmparelhadas)) {
+                    $resultado = new Resultado([
+                        'campeonato_id' => $id,
+                        'fase_id' => 1,
+                        'equipe_a_id' => $equipeAId,
+                        'equipe_b_id' => $equipeBId,
+                        'gols_equipe_a' => null,
+                        'gols_equipe_b' => null,
+                    ]);
+                    $resultado->save();
+
+                    $equipesEmparelhadas[] = $equipeAId;
+                    $equipesEmparelhadas[] = $equipeBId;
+                }
+            }
+
+            Campeonato::where('id', $id)->update(['status_id' => 2]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Sorteio realizado com sucesso!',
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erro ao realizar sorteio das equipes.',
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     public function simulateGame($id) 
     {
         $resultado = Resultado::find($id);

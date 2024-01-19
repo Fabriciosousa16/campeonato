@@ -53,8 +53,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('simulation/generate-final-match', [SimulationController::class, 'generateFinalMatch']);
 
     Route::post('simulation/verify-exist-simulation/{id}', [SimulationController::class, 'countResultsForChampionship']);
-   // Route::post('simulation/verify-fases-simulation/{id}', [SimulationController::class, 'verifyFases']);
-    
+    Route::post('simulation/verify-fases-simulation/{id}', [SimulationController::class, 'verifyFases']); 
    
     Route::get('simulation/list/match/{id}', [SimulationController::class, 'listForMatch']);
 
