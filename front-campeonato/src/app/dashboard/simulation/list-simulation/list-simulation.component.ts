@@ -45,7 +45,6 @@ export class ListSimulationComponent {
     this.SimulationService.listSimulation().subscribe((resp: any) => {
       console.log(resp.simulacao);
 
-      // Verifique se resp.simulacao existe antes de tentar acessar seu comprimento
       if (resp && resp.simulacao && Array.isArray(resp.simulacao)) {
         this.totalData = resp.simulacao.length;
 
@@ -61,7 +60,6 @@ export class ListSimulationComponent {
         this.calculateTotalPages(this.totalData, this.pageSize);
       } else {
         console.error('A propriedade simulacao não existe ou não é um array válido:', resp);
-        // Adicione lógica de tratamento de erro conforme necessário
       }
     });
   }

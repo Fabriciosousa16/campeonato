@@ -36,7 +36,6 @@ export class ListHistoryComponent {
 
   }
   ngOnInit() {
-    //this.getTableData();
 
     this.HistoryService.listHistory().subscribe(
       (resp: any) => {
@@ -51,7 +50,6 @@ export class ListHistoryComponent {
       },
       (error) => {
         console.error('Erro ao obter lista de campeonatos:', error);
-        // Adicione lógica de tratamento de erro conforme necessário
       }
     );
   }
@@ -65,7 +63,7 @@ export class ListHistoryComponent {
     this.serialNumberArray = [];
 
     this.HistoryService.listHistoryForChampionship(this.campeonato_id).subscribe((resp: any) => {
-      console.log(resp.result);  // Corrigir o nome da propriedade para 'historys'
+      console.log(resp.result);
 
       if (resp && resp.result && Array.isArray(resp.result)) {
         this.totalData = resp.result.length;
@@ -82,7 +80,6 @@ export class ListHistoryComponent {
         this.calculateTotalPages(this.totalData, this.pageSize);
       } else {
         console.error('A propriedade result não existe ou não é um array válido:', resp);
-        // Adicione lógica de tratamento de erro conforme necessário
       }
     });
   }

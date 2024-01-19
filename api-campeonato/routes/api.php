@@ -38,7 +38,7 @@ Route::group([
 
 //Route::group(['middleware' => 'auth:api'], function () {
 
-Route::group([], function () {
+Route::group(['middleware' => 'auth:api'], function () {
     Route::resource("championship", ChampionshipController::class);
     Route::resource("teams", TeamsController::class);
     Route::resource("simulation", SimulationController::class);

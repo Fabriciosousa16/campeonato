@@ -27,9 +27,9 @@ class ChampionshipController extends Controller
                     'id' => $resp->id,
                     'name' => $resp->name,
                     'torneio_id' => $resp->torneio_id,
-                    'status_id' => $status ? $status->name : null, // Exibe o nome do status se encontrado
-                    'created_at' => $resp->created_at->format("d/m/Y H:i:s"), // Formato brasileiro
-                    'updated_at' => $resp->updated_at->format("d/m/Y H:i:s"), // Formato brasileiro
+                    'status_id' => $status ? $status->name : null, 
+                    'created_at' => $resp->created_at->format("d/m/Y H:i:s"), 
+                    'updated_at' => $resp->updated_at->format("d/m/Y H:i:s"), 
                 ];
             }),
         ]);

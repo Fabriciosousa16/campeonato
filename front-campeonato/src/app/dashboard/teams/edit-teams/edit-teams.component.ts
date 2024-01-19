@@ -45,7 +45,6 @@ export class EditTeamsComponent {
 
     this.ChampionshipService.listChampionships().subscribe(
       (resp: any) => {
-        // Verifique se o array championshipsList existe nos dados retornados
         if (resp && Array.isArray(resp.campeonato)) {
           this.championshipList = resp.campeonato;
         } else {
@@ -54,7 +53,6 @@ export class EditTeamsComponent {
       },
       (error) => {
         console.error('Erro ao obter lista de campeonatos:', error);
-        // Adicione lógica de tratamento de erro conforme necessário
       }
     );
   }

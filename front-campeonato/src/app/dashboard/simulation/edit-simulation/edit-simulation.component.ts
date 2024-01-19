@@ -37,16 +37,13 @@ export class EditSimulationComponent {
       this.role_id = resp.id;
     });
     this.showRole();
-    this.showButtonExistSimulation(); //Simulação
-    this.showButtonPrizeDrawExist(); // sorteio
+    this.showButtonPrizeDrawExist();
   }
 
-  // Mostrar Lista de Partidas entre as equipes que não se enfrentaram ainda
   showRole() {
 
     this.SimulationService.listMatchSimulation(this.role_id).subscribe(
       (resp: any) => {
-        // Verifique se o array championshipsList existe nos dados retornados
         if (resp && Array.isArray(resp.resultado)) {
           this.simulationMatchList = resp.resultado;
         } else {
@@ -60,7 +57,6 @@ export class EditSimulationComponent {
 
     this.SimulationService.listResultMatchSimulation(this.role_id).subscribe(
       (resp: any) => {
-        // Verifique se o array championshipsList existe nos dados retornados
         if (resp && Array.isArray(resp.result)) {
           this.simulationResultMatchList = resp.result;
         } else {
@@ -81,13 +77,10 @@ export class EditSimulationComponent {
         if (resp && resp.quant !== undefined) {
           console.log('Quantidade:', resp.quant);
 
-          // Verifica se há simulações
           this.showButtonPrizeDraw = resp.quant <= 0;
 
-          // Se não houver simulações, mostra o botão showButtonMatch
           this.showButtonMatch = !this.showButtonPrizeDraw;
         } else {
-          // Trate conforme necessário se a resposta não possuir a propriedade "quant".
           console.log('Resposta da API não possui a propriedade "quantidade".');
         }
       },
@@ -98,17 +91,10 @@ export class EditSimulationComponent {
   }
 
 
-  showButtonExistSimulation() {
-
-    //
-
-  }
-  //Realizar o sorteio das equipes (Soteio Inicial)
   drawTeams() {
     this.SimulationService.drawSimulation(this.role_id).subscribe(
 
       (response: any) => {
-        // Lógica para tratar a resposta após o sorteio, se necessário
         console.log('Resultado do sorteio:', response);
 
         this.reloadPage();
@@ -116,7 +102,6 @@ export class EditSimulationComponent {
       },
       (error) => {
         console.error('Erro ao realizar sorteio das equipes', error);
-        // Pode tratar o erro aqui, se necessário
       }
     );
 
@@ -128,7 +113,6 @@ export class EditSimulationComponent {
     });
   }
 
-  // Simular Partida do campeonto
   simulateMatch() {
 
     console.log('Campeonato ID:', this.campeonato_id);
@@ -136,15 +120,12 @@ export class EditSimulationComponent {
     this.SimulationService.simulateMatch(this.campeonato_id).subscribe(
 
       (response: any) => {
-        // Lógica para tratar a resposta após o sorteio, se necessário
         console.log('Partida Simulada:', response);
 
-        // Recarregar a página após a simulação
         this.reloadPage();
       },
       (error) => {
         console.error('Erro ao simular Patida', error);
-        // Pode tratar o erro aqui, se necessário
       }
     );
   }

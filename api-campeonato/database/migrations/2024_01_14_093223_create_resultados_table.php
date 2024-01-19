@@ -21,7 +21,6 @@ class CreateResultadosTable extends Migration
             $table->foreignId('equipe_b_id')->constrained('times');
             $table->integer('gols_equipe_a')->nullable();
             $table->integer('gols_equipe_b')->nullable();
-            // outros campos, se necessário
             $table->timestamps();
         });
     }

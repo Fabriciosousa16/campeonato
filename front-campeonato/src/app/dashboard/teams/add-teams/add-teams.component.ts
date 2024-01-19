@@ -28,11 +28,8 @@ export class AddTeamsComponent {
   ngOnInit() {
     this.sideBar = this.DataService.sideBar[0].menu;
 
-    // alert(JSON.stringify(this.championshipList)); // Exibe os dados em uma janela de alerta
-
     this.ChampionshipService.listChampionships().subscribe(
       (resp: any) => {
-        // Verifique se o array championshipsList existe nos dados retornados
         if (resp && Array.isArray(resp.campeonato)) {
           this.championshipList = resp.campeonato;
         } else {
@@ -41,7 +38,6 @@ export class AddTeamsComponent {
       },
       (error) => {
         console.error('Erro ao obter lista de campeonatos:', error);
-        // Adicione lógica de tratamento de erro conforme necessário
       }
     );
 

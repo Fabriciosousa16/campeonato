@@ -33,8 +33,7 @@ export class AuthService {
   }
 
   public login(email: string, password: string) {
-    //localStorage.setItem('authenticated', 'true');
-    //this.router.navigate([routes.adminDashboard]);
+
     const URL = URL_SEVICES + "/auth/login";
 
     return this.http.post(URL, { email: email, password: password }).pipe(

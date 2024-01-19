@@ -11,7 +11,6 @@ class TeamsController extends Controller
 {
     public function index()
     {
-      // Seu controlador
         $times = Time::with('campeonato')->get();
 
         return response()->json([

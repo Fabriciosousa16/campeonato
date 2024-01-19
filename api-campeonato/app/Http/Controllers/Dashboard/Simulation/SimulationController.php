@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Dashboard\Simulation;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Campeonato;
 use App\Models\Time;
 use App\Models\Resultado;
@@ -22,7 +21,7 @@ class SimulationController extends Controller
      */
     public function index()
     {
-        $simulacao = Campeonato::whereIn('status_id', [1, 2])->get();
+        $simulacao = Campeonato::whereIn('status_id', [1, 2,4])->get();
 
         return response()->json([
             'simulacao' => $simulacao->map(function ($resp) {
@@ -124,114 +123,6 @@ class SimulationController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
-    }
-
-
-    public function prizeDraw($id)
-    {
-        try {
-            // Verificar se há exatamente 8 times cadastrados no campeonato
-            $countTimes = Time::where('campeonato_id', $id)->count();
-            
-            $quantidadeResultadosFase1 = Resultado::where('campeonato_id', $id)
-            ->where('fase_id', 1)
-            ->count();
-
-            if ($countTimes !== 8) {
-                // Se não houver exatamente 8 times, retornar uma resposta indicando o problema
-                return response()->json([
-                    'status' => 403,
-                    'message' => 'O sorteio só pode ser realizado se houver exatamente 8 times cadastrados no campeonato.'
-                ]);
-            }
-
-            if ($quantidadeResultadosFase1 >= 4) {
-                // Se a quantidade for maior ou igual a 4, o sorteio já foi realizado
-                return response()->json([
-                    'status' => 403,
-                    'message' => 'O sorteio da fase 1 já foi realizado.',
-                    'quantidade' => $quantidadeResultadosFase1,
-                ]);
-            }
-            
-            // Se houver exatamente 8 times, prosseguir com o sorteio
-            $equipes = Time::join('campeonatos', 'times.campeonato_id', '=', 'campeonatos.id')
-                ->where('times.campeonato_id', $id)
-                ->where('campeonatos.status_id', 1)
-                ->get(['times.id']);
-
-            /// Embaralhar as equipes
-            $equipesEmbaralhadas = $equipes->shuffle()->all();
-
-            // Dividir as equipes em pares para as quartas de finais
-            $paresDeEquipes = array_chunk($equipesEmbaralhadas, 2);
-
-            // Inicializar um array para rastrear as equipes que já foram emparelhadas
-            $equipesEmparelhadas = [];
-
-            // Iterar sobre os pares de equipes e criar os confrontos
-            foreach ($paresDeEquipes as $par) {
-                $equipeAId = optional($par[0])['id'];
-                $equipeBId = optional($par[1])['id'];
-
-                // Verificar se ambas as equipes não foram emparelhadas antes
-                if ($equipeAId && $equipeBId && !in_array($equipeAId, $equipesEmparelhadas) && !in_array($equipeBId, $equipesEmparelhadas)) {
-                    $resultado = new Resultado([
-                        'campeonato_id' => $id,
-                        'fase_id' => 1,
-                        'equipe_a_id' => $equipeAId,
-                        'equipe_b_id' => $equipeBId,
-                        'gols_equipe_a' => null,
-                        'gols_equipe_b' => null,
-                    ]);
-                    $resultado->save();
-
-                    // Adicionar as equipes ao array de equipes emparelhadas
-                    $equipesEmparelhadas[] = $equipeAId;
-                    $equipesEmparelhadas[] = $equipeBId;
-                }
-            }
-
-            // Alterar o status do campeonato para 2 na tabela campeonatos
-            Campeonato::where('id', $id)->update(['status_id' => 2]);
-
-            // Retornar uma resposta de sucesso com os valores gerados
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Sorteio realizado com sucesso!',
-            ]);
-        } catch (\Exception $e) {
-            // Retornar uma resposta de erro em caso de exceção
-            return response()->json([
-                'status' => 500,
-                'message' => 'Erro ao realizar sorteio das equipes.',
-                'error' => $e->getMessage(),
-            ]);
-        }
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -268,10 +159,8 @@ class SimulationController extends Controller
 
     public function simulateGame($id) 
     {
-    // Encontrar o resultado pelo ID
         $resultado = Resultado::find($id);
 
-        // Verificar se o resultado foi encontrado
         if (!$resultado) {
             return response()->json([
                 'status' => 404,
@@ -280,7 +169,6 @@ class SimulationController extends Controller
             ], 404);
         }
 
-        // Verificar se o jogo já foi simulado
         if ($resultado->gols_equipe_a !== null && $resultado->gols_equipe_b !== null) {
             return response()->json([
                 'status' => 400,
@@ -288,17 +176,14 @@ class SimulationController extends Controller
             ], 400);
         }
 
-        // Simular o jogo (gerar gols aleatórios, por exemplo)
-        $golsEquipeA = random_int(0, 5); // Simulação de gols para a equipe A
-        $golsEquipeB = random_int(0, 5); // Simulação de gols para a equipe B
+        $golsEquipeA = random_int(0, 5); 
+        $golsEquipeB = random_int(0, 5); 
 
-        // Atualizar o resultado com os gols simulados
         $resultado->update([
             'gols_equipe_a' => $golsEquipeA,
             'gols_equipe_b' => $golsEquipeB,
         ]);
 
-        // Verificar se os gols são iguais
         if ($golsEquipeA == $golsEquipeB) { 
             $this->disputaPenaltys($id);
         }
@@ -401,8 +286,6 @@ class SimulationController extends Controller
                         $vencedoresQuartasFinais[] = $resultado->equipe_b_id;
                     } else {
                         // Lógica adicional se ainda estiver empatado após o desempate por pênaltis
-                        // Aqui você pode adicionar uma lógica específica para o caso de empate nos pênaltis
-                        // Se necessário
                     }
                 } else {
                     // Lógica adicional se não houver informações de pênaltis na tabela "Penalty"
@@ -452,18 +335,16 @@ class SimulationController extends Controller
             } elseif ($resultado->gols_equipe_a < $resultado->gols_equipe_b) {
                 $equipesTerceiroLugar[] = $resultado->equipe_a_id;
             } else {
-                // O jogo está empatado, verificar na tabela "Penalty"
                 $penalty = Penalty::where('resultado_id', $resultado->id)->first();
     
                 if ($penalty) {
-                    // Verificar qual equipe teve mais gols na tabela "Penalty"
+
                     if ($penalty->gols_equipe_a > $penalty->gols_equipe_b) {
                         $equipesTerceiroLugar[] = $resultado->equipe_b_id;
                     } elseif ($penalty->gols_equipe_a < $penalty->gols_equipe_b) {
                         $equipesTerceiroLugar[] = $resultado->equipe_a_id;
                     } else {
                         // Lógica adicional se ainda estiver empatado após o desempate por pênaltis
-                        // Se necessário
                     }
                 } else {
                     // Lógica adicional se não houver informações de pênaltis na tabela "Penalty"
@@ -471,9 +352,8 @@ class SimulationController extends Controller
             }
         }
     
-        // Verificar se há equipes suficientes para gerar a disputa de terceiro lugar
         if (count($equipesTerceiroLugar) == 2) {
-            // Inserir o jogo da disputa de terceiro lugar
+
             $resultado = new Resultado([
                 'fase_id' => 3,
                 'campeonato_id' => $id,
@@ -498,7 +378,6 @@ class SimulationController extends Controller
     
     public function generateFinalMatch($id)
     {
-        // Obter as equipes que venceram nas semifinais
         $vencedoresSemifinais = Resultado::where('fase_id', 2)
             ->where('campeonato_id', $id)
             ->get(['id', 'equipe_a_id', 'equipe_b_id', 'gols_equipe_a', 'gols_equipe_b']);
@@ -511,11 +390,9 @@ class SimulationController extends Controller
             } elseif ($resultado->gols_equipe_a < $resultado->gols_equipe_b) {
                 $equipesFinal[] = $resultado->equipe_b_id;
             } else {
-                // O jogo está empatado, verificar na tabela "Penalty"
                 $penalty = Penalty::where('resultado_id', $resultado->id)->first();
     
                 if ($penalty) {
-                    // Verificar qual equipe teve mais gols na tabela "Penalty"
                     if ($penalty->gols_equipe_a > $penalty->gols_equipe_b) {
                         $equipesFinal[] = $resultado->equipe_a_id;
                     } elseif ($penalty->gols_equipe_a < $penalty->gols_equipe_b) {
@@ -529,9 +406,7 @@ class SimulationController extends Controller
             }
         }
     
-        // Verificar se há equipes suficientes para gerar a final
         if (count($equipesFinal) == 2) {
-            // Inserir o jogo da final
             $resultado = new Resultado([
                 'fase_id' => 4,
                 'campeonato_id' => $id,
@@ -558,11 +433,10 @@ class SimulationController extends Controller
     
     public function disputaPenaltys($resultadoId)
     {
-        // Obter o resultado do jogo para acessar informações das equipes
         $resultado = Resultado::find($resultadoId);
         
         if (!$resultado) {
-            // Lida com a situação em que o resultado não foi encontrado
+            
             return response()->json([
                 'status' => 404,
                 'message' => 'Resultado não encontrado.',
@@ -570,29 +444,24 @@ class SimulationController extends Controller
             ], 404);
         }
         
-        // Simular a disputa de pênaltis
         $golsEquipeA = 0;
         $golsEquipeB = 0;
         
-        $rodadasIniciais = 5; // Número inicial de rodadas regulares
+        $rodadasIniciais = 5; 
         $cobrancasAlternadas = 0;
         
-        // Converter 70% de chance para uma faixa de 0 a 6 (por exemplo)
         $intervaloGol = 6;
         
-        // Simulação das rodadas regulares
         for ($i = 0; $i < $rodadasIniciais; $i++) {
-            // Gere valores aleatórios para os gols de cada equipe (70% de chance de sucesso)
-            $golAleatorioEquipeA = (random_int(0, $intervaloGol) < 5) ? 1 : 0; // 70% de chance de sucesso
-            $golAleatorioEquipeB = (random_int(0, $intervaloGol) < 5) ? 1 : 0; // 70% de chance de sucesso
-        
-            // Adicione os gols gerados ao placar
+
+            $golAleatorioEquipeA = (random_int(0, $intervaloGol) < 5) ? 1 : 0; 
+            $golAleatorioEquipeB = (random_int(0, $intervaloGol) < 5) ? 1 : 0;         
+            
             $golsEquipeA += $golAleatorioEquipeA;
             $golsEquipeB += $golAleatorioEquipeB;
         
             $cobrancasAlternadas++;
             
-            // Verificar se uma equipe já venceu e a outra não pode mais alcançar
             if ($golsEquipeA > $golsEquipeB + (10 - $cobrancasAlternadas)) {
                 break;
             } elseif ($golsEquipeB > $golsEquipeA + (10 - $cobrancasAlternadas)) {
@@ -600,9 +469,8 @@ class SimulationController extends Controller
             }
         }
         
-        // Continuar a simulação de rodadas até que haja um vencedor
         while ($golsEquipeA === $golsEquipeB && $cobrancasAlternadas < 10) {
-            // Gere valores aleatórios para os gols de cada equipe (70% de chance de sucesso)
+
             $golAleatorioEquipeA = (random_int(0, $intervaloGol) < 5) ? 1 : 0;
             $golAleatorioEquipeB = (random_int(0, $intervaloGol) < 5) ? 1 : 0;
 
@@ -612,7 +480,6 @@ class SimulationController extends Controller
             $cobrancasAlternadas++;
         }
         
-        // Salvar os resultados na tabela 'penaltys'
         $penalty = new Penalty([
             'resultado_id' => $resultadoId,
             'gols_equipe_a' => $golsEquipeA,

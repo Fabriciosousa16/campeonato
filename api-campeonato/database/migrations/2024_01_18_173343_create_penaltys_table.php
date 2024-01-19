@@ -20,7 +20,6 @@ class CreatePenaltysTable extends Migration
             $table->integer('gols_equipe_a')->nullable();
             $table->integer('gols_equipe_b')->nullable();
             $table->timestamps();
-
             $table->foreign('resultado_id')->references('id')->on('resultados');
         });
     }
