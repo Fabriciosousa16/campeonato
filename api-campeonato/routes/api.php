@@ -58,6 +58,8 @@ Route::group([], function () {
    
     Route::get('simulation/list/match/{id}', [SimulationController::class, 'listForMatch']);
 
+    Route::get('simulation/list/result/match/{id}', [SimulationController::class, 'listResultMatch']);
+
     Route::put('simulation/match/{id}', [SimulationController::class, 'simulateGame']);
 
     Route::get("history/list/championship/{id}", [HistoryController::class, 'listHistoryForChampionship']);

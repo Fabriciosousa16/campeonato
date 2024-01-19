@@ -30,4 +30,10 @@ class Resultado extends Model
     {
         return $this->belongsTo(Time::class, 'equipe_b_id');
     }
+
+    public function penalty()
+    {
+        return $this->hasOne(Penalty::class, 'resultado_id');
+    }
+
 }

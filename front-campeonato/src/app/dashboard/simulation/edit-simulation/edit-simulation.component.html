@@ -28,99 +28,222 @@
 
                                 <div class="col-12 col-md-4 col-xl-4">
                                     <div class="form-group local-forms">
-                                        <label>Quartas de Finais <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
+
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 0">
+                                                <label>Jogo {{ i+1 }} {{ data.fase }} <span
+                                                        class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                    data.equipe_a.nome + ' ' + 
+                                                    (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                    (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                    ' x ' +
+                                                    (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                    (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                    ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group local-forms">
-                                        <label>Quartas de Finais <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
+
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 1">
+                                                <label>Jogo {{ i+1 }} {{ data.fase }} <span
+                                                        class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                    data.equipe_a.nome + ' ' + 
+                                                    (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                    (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                    ' x ' +
+                                                    (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                    (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                    ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group local-forms">
-                                        <label>Quartas de Finais <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
+
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 2">
+                                                <label>Jogo {{ i+1 }} {{ data.fase }} <span
+                                                        class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                    data.equipe_a.nome + ' ' + 
+                                                    (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                    (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                    ' x ' +
+                                                    (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                    (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                    ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group local-forms">
-                                        <label>Quartas de Finais <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                    </div>
-                                </div>
 
-                                <!-- <div class="col-12 col-md-4 col-xl-4">
-                                    <div class="form-group local-forms">
-                                        <label>Semifinal <span class="login-danger">*</span></label>
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 3">
+                                                <label>Jogo {{ i+1 }} {{ data.fase }} <span
+                                                        class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                    data.equipe_a.nome + ' ' + 
+                                                    (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                    (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                    ' x ' +
+                                                    (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                    (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                    ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
 
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
                                     </div>
 
-                                    <div class="form-group local-forms">
-                                        <label>Semifinal <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                    </div>
+
                                 </div>
 
                                 <div class="col-12 col-md-4 col-xl-4">
-
                                     <div class="form-group local-forms">
-                                        <label>Disuta de 3º Lugar <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                    </div>
 
-                                    <div class="form-group local-forms">
-                                        <label>Final <span class="login-danger">*</span></label>
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                        <input class="form-control" type="text" [(ngModel)]="name" name="name1"
-                                            placeholder="Nome do Time">
-                                    </div>
-                                </div> -->
-
-                                <div class="col-12">
-                                    <div class="doctor-submit text-end">
                                         <div class="form-group local-forms">
-                                            <label>Selecionar Partida <span class="login-danger">*</span></label>
+                                        </div>
+
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 4">
+                                                <label>Jogo {{ i+1 }} {{ data.fase }} <span
+                                                        class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                    data.equipe_a.nome + ' ' + 
+                                                    (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                    (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                    ' x ' +
+                                                    (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                    (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                    ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group local-forms">
+
+                                        <div class="form-group local-forms">
+                                        </div>
+
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 5">
+                                                <label>Jogo {{ i+1 }} {{ data.fase }} <span
+                                                        class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                    data.equipe_a.nome + ' ' + 
+                                                    (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                    (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                    ' x ' +
+                                                    (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                    (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                    ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group local-forms">
+
+                                        <div class="form-group local-forms">
+                                        </div>
+
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 6">
+                                                <label>{{ data.fase }} <span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                    data.equipe_a.nome + ' ' + 
+                                                    (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                    (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                    ' x ' +
+                                                    (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                    (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                    ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 col-md-4 col-xl-4">
+                                    <br>
+                                    <div class="form-group local-forms">
+
+                                    </div>
+                                    <div class="form-group local-forms">
+                                        <br>
+                                    </div>
+                                    <div class="form-group local-forms">
+
+
+                                        <div *ngFor="let data of simulationResultMatchList; let i = index">
+                                            <ng-container *ngIf="i === 7">
+                                                <label>{{ data.fase }} <span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" [value]="
+                                                        data.equipe_a.nome + ' ' + 
+                                                        (data.equipe_a.gols_marcados !== null ? data.equipe_a.gols_marcados : '') +
+                                                        (data.equipe_a.gols_penaltis !== null ? ' (' + data.equipe_a.gols_penaltis + ')' : '') +
+                                                        ' x ' +
+                                                        (data.equipe_b.gols_marcados !== null ? data.equipe_b.gols_marcados : '') +
+                                                        (data.equipe_b.gols_penaltis !== null ? ' (' + data.equipe_b.gols_penaltis + ')' : '') +
+                                                        ' ' + data.equipe_b.nome">
+                                            </ng-container>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 col-md-8 col-xl-8">
+
+                                    <div class="doctor-submit text-end">
+
+                                        <div class="form-group local-forms">
+                                            <label>Selecione uma Partida Para ser
+                                                Simulada<span class="login-danger">*</span></label>
                                             <mat-select [(ngModel)]="campeonato_id"
                                                 [ngModelOptions]="{standalone: true}" class="form-control select"
                                                 placeholder="Selecione Partida">
-                                                <mat-option [value]="null">Selecione uma Partida</mat-option>
+                                                <mat-option [value]="null">Selecione uma Partida Para ser
+                                                    Simulada</mat-option>
                                                 <mat-option *ngFor="let data of simulationMatchList" [value]="data.id">
-                                                    {{ data.fase }} - {{ data.equipe_a }} x {{ data.equipe_b }}
+                                                    {{ data.fase }} -
+                                                    {{ data.equipe_a }}
+                                                    {{ data.equipe_b }}
                                                 </mat-option>
                                             </mat-select>
                                         </div>
 
-                                        <button *ngIf="showButton" type="submit"
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 col-md-4 col-xl-4">
+
+                                    <div class="doctor-submit text-end">
+
+                                        <button *ngIf="showButtonPrizeDraw" type="submit"
                                             class="btn btn-primary submit-form me-2"
                                             (click)="drawTeams()">Sorteio</button>
 
                                         <button type="submit" class="btn btn-primary submit-form me-2"
-                                            (click)="simulateMatch()">Simular Partida</button>
+                                            (click)="simulateMatch()">Simular
+                                            Partida</button>
                                         <button type="submit" class="btn btn-primary cancel-form">Cancelar</button>
+
                                     </div>
+
                                 </div>
+
                             </div>
                         </form>
                     </div>

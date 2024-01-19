@@ -29,6 +29,14 @@ export class SimulationService {
     return this.http.get(URL, { headers: headers });
   }
 
+  //Exibir confrontos do campeonato que ainda não foram simulados
+  listResultMatchSimulation(id: number) {
+    const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });
+    const URL = URL_SEVICES + "/simulation/list/result/match/" + id;
+    return this.http.get(URL, { headers: headers });
+  }
+
+
   //Nada
   showSimulation(id: string) {
     const headers = new HttpHeaders({ "Authorization": 'Bearer ' + this.authService.token });

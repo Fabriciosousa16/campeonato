@@ -50,7 +50,7 @@ class SimulationController extends Controller
     public function listForMatch($id)
     {
         try {
-            // Obter resultados com gols_equipe_a e gols_equipe_b nulos para o campeonato específico
+            
             $resultados = Resultado::where('campeonato_id', $id)
                 ->whereNull('gols_equipe_a')
                 ->whereNull('gols_equipe_b')
@@ -69,7 +69,49 @@ class SimulationController extends Controller
                                 ];
                     }),
                 ]);
-    
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Erro ao obter resultados do campeonato.',
+                'error' => $e->getMessage(),
+            ]);
+        }
+        
+    }
+
+    public function listResultMatch($id)
+    {
+        try {
+        
+            $resultados = Resultado::where('campeonato_id', $id)->with('penalty')->get();
+
+            return response()->json([
+                'result' => $resultados->map(function ($resp) {
+                    $equipeA = Time::find($resp->equipe_a_id);
+                    $equipeB = Time::find($resp->equipe_b_id);
+                    $fase = Fase::find($resp->fase_id);
+
+                    // Verifica se há dados em penalts
+                    $penaltyA = $resp->penalty ? $resp->penalty->gols_equipe_a : null;
+                    $penaltyB = $resp->penalty ? $resp->penalty->gols_equipe_b : null;
+
+                    return [
+                        'id' => $resp->id,
+                        'fase' => $fase ? $fase->name : null,
+                        'equipe_a' => [
+                            'nome' => $equipeA ? $equipeA->name : null,
+                            'gols_marcados' => $resp->gols_equipe_a,
+                            'gols_penaltis' => $penaltyA,
+                        ],
+                        'equipe_b' => [
+                            'nome' => $equipeB ? $equipeB->name : null,
+                            'gols_marcados' => $resp->gols_equipe_b,
+                            'gols_penaltis' => $penaltyB,
+                        ],
+                    ];
+                }),
+            ]);
             
         } catch (\Exception $e) {
             return response()->json([

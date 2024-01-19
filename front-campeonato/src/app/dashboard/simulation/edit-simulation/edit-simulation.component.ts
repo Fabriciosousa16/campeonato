@@ -17,9 +17,11 @@ export class EditSimulationComponent {
 
   public campeonato_id: any;
   public simulationMatchList: any = [];
+  public simulationResultMatchList: any = [];
 
   role_id: any;
-  showButton = false;
+  showButtonMatch = false;
+  showButtonPrizeDraw = false;
 
   constructor(
     public DataService: DataService,
@@ -35,15 +37,12 @@ export class EditSimulationComponent {
       this.role_id = resp.id;
     });
     this.showRole();
-    this.showButtonExistSimulation();
+    this.showButtonExistSimulation(); //Simulação
+    this.showButtonPrizeDrawExist(); // sorteio
   }
 
   // Mostrar Lista de Partidas entre as equipes que não se enfrentaram ainda
   showRole() {
-    // this.SimulationService.showSimulation(this.role_id).subscribe((resp: any) => {
-    //   console.log(resp);
-    //   // this.name = resp.name;
-    // });
 
     this.SimulationService.listMatchSimulation(this.role_id).subscribe(
       (resp: any) => {
@@ -58,24 +57,38 @@ export class EditSimulationComponent {
         console.error('Erro ao obter lista de Partidas:', error);
       }
     );
+
+    this.SimulationService.listResultMatchSimulation(this.role_id).subscribe(
+      (resp: any) => {
+        // Verifique se o array championshipsList existe nos dados retornados
+        if (resp && Array.isArray(resp.result)) {
+          this.simulationResultMatchList = resp.result;
+        } else {
+          console.error('Array simulationResultMatchList não encontrado nos dados retornados.');
+        }
+      },
+      (error) => {
+        console.error('Erro ao obter lista de Partidas:', error);
+      }
+
+    );
+
   }
 
-  // Mostrar botão para realizar sorteio, caso campeonato esteja apenas no nivel 1 (Aberto)
-  showButtonExistSimulation() {
+  showButtonPrizeDrawExist() {
     this.SimulationService.verifyExistSimulation(this.role_id).subscribe(
       (resp: any) => {
-        // Adiciona log para verificar se 'quantidade' está presente
-        // console.log('Quantidade presente:', resp && resp.quant !== undefined);
-
-        // Verifica se a resposta não é nula e possui a propriedade 'quantidade'
         if (resp && resp.quant !== undefined) {
-          // console.log('Quantidade:', resp.quant);
+          console.log('Quantidade:', resp.quant);
 
-          // Verifica se 'quantidade' é menor ou igual a 0
-          this.showButton = resp.quant <= 0;
+          // Verifica se há simulações
+          this.showButtonPrizeDraw = resp.quant <= 0;
+
+          // Se não houver simulações, mostra o botão showButtonMatch
+          this.showButtonMatch = !this.showButtonPrizeDraw;
         } else {
-          // console.log('Resposta da API não possui a propriedade "quantidade".');
-          // Trate conforme necessário, como definir this.showButton para um valor padrão
+          // Trate conforme necessário se a resposta não possuir a propriedade "quant".
+          console.log('Resposta da API não possui a propriedade "quantidade".');
         }
       },
       (error) => {
@@ -84,6 +97,12 @@ export class EditSimulationComponent {
     );
   }
 
+
+  showButtonExistSimulation() {
+
+    //
+
+  }
   //Realizar o sorteio das equipes (Soteio Inicial)
   drawTeams() {
     this.SimulationService.drawSimulation(this.role_id).subscribe(
